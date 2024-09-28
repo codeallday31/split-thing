@@ -1,0 +1,5 @@
+composer run pint
+composer run phpstan
+composer run test
+npm run lint
+npm run format
