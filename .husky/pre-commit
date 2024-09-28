@@ -1,5 +1,5 @@
-composer run pint
-composer run phpstan
-composer run test
+composer run-script pint
+composer run-script phpstan
+composer run-script test
 npm run lint
 npm run format
