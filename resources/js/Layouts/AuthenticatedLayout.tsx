@@ -1,4 +1,3 @@
-import Drawer from '@/Components/Drawer';
 import {
     Dialog,
     DialogBackdrop,
@@ -17,7 +16,6 @@ export default function AuthenticatedLayout({
 
     return (
         <>
-            <Drawer />
             <div>
                 <Dialog
                     open={sidebarOpen}

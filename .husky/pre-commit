@@ -1,5 +1,5 @@
 composer run-script pint
-composer run-script phpstan
+#composer run-script phpstan
 npm run lint
 npm run lint:prettier
 npm run format

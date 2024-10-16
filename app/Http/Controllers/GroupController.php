@@ -9,11 +9,11 @@ class GroupController
 {
     public function index(): Response
     {
-        return Inertia::render('Group/Index');
+        return Inertia::render('Group/index');
     }
 
     public function create(): Response
     {
-        return Inertia::render('Group/Create');
+        return Inertia::render('Group/create');
     }
 }

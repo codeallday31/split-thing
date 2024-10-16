@@ -56,7 +56,7 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "pint": "./vendor/bin/pint",
-        "phpstan": "./vendor/bin/phpstan analyse",
+        "phpstan": "./vendor/bin/phpstan analyse --memory-limit=2G",
         "test": "./vendor/bin/pest --parallel"
     },
     "extra": {
