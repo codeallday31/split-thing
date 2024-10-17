@@ -1,4 +1,4 @@
-import { Button } from '@/Components/ui/button';
+import { Button } from '@/components/ui/button';
 import AuthenticatedLayout from '@/Layouts/authenticated-layout';
 import { Link } from '@inertiajs/react';
 

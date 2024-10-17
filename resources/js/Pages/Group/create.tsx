@@ -1,36 +1,38 @@
-import { Button } from '@/Components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
-} from '@/Components/ui/card';
-import { Input } from '@/Components/ui/input';
-import { Label } from '@/Components/ui/label';
-import { Textarea } from '@/Components/ui/textarea';
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { Textarea } from '@/components/ui/textarea';
 import AuthenticatedLayout from '@/Layouts/authenticated-layout';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
 
-interface IGroupMember {
-    id: number;
-    name: string;
-}
-
 interface GroupCreateState {
     groupName: string;
     groupDescription: string;
-    groupMembers: IGroupMember[];
+    groupMembers: string[];
 }
 
-const randomNumber = () => {
-    return Math.floor(Math.random() * 1000);
-};
+interface IUser {
+    value: string;
+    label: string;
+}
 
-export default function Create() {
-    const { data, setData } = useForm<GroupCreateState>({
+interface CreateProp {
+    model: {
+        users: IUser[];
+    };
+}
+
+export default function Create({ model }: CreateProp) {
+    const { data, setData, post } = useForm<GroupCreateState>({
         groupName: '',
         groupDescription: '',
         groupMembers: [],
@@ -38,21 +40,11 @@ export default function Create() {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        console.log(data);
+        post(route('groups.store'));
     };
 
-    const handleAddMember = (id: number) => {
-        const members = [...data.groupMembers, { id, name: '' }];
-
-        setData('groupMembers', members);
-    };
-
-    const handleMemberChange = (id: number, value: string) => {
-        const members = data.groupMembers.map((member) =>
-            member.id === id ? { ...member, name: value } : member,
-        );
-
-        setData('groupMembers', members);
+    const handleMultiSelectChange = (value: string[]) => {
+        setData('groupMembers', value);
     };
 
     return (
@@ -60,9 +52,6 @@ export default function Create() {
             <Head title="Group" />
             <div>
                 <form className="grid gap-6" onSubmit={handleSubmit}>
-                    <div>
-                        <Button>Save</Button>
-                    </div>
                     <Card>
                         <CardHeader>
                             <CardTitle>
@@ -112,28 +101,19 @@ export default function Create() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="flex flex-col gap-4">
-                            {data.groupMembers.map(({ id, name }) => (
-                                <div className="grid gap-3" key={id}>
-                                    <Input
-                                        value={name}
-                                        onChange={(e) =>
-                                            handleMemberChange(
-                                                id,
-                                                e.target.value,
-                                            )
-                                        }
-                                    />
-                                </div>
-                            ))}
+                            <MultiSelect
+                                options={model.users}
+                                onValueChange={handleMultiSelectChange}
+                                defaultValue={data.groupMembers}
+                                placeholder="Select members"
+                                variant="inverted"
+                                maxCount={3}
+                            />
                         </CardContent>
-                        <CardFooter className="border-t px-6 py-4">
-                            <Button
-                                onClick={() => handleAddMember(randomNumber())}
-                            >
-                                Add Member
-                            </Button>
-                        </CardFooter>
                     </Card>
+                    <div>
+                        <Button>Save</Button>
+                    </div>
                 </form>
             </div>
         </AuthenticatedLayout>
