@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Data\GroupData;
+use App\Models\Concerns\HasUser;
 use App\Models\Group\Expense;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\LaravelData\WithData;
 
 class Group extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUser;
+    use WithData;
 
     /**
      * The attributes that are mass assignable.
@@ -22,17 +25,19 @@ class Group extends Model
         'name',
         'description',
         'type',
+        'user_id',
     ];
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $dataClass = GroupData::class;
+
+    protected $casts = [
+        'id' => 'integer',
+    ];
 
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_member')
-            ->withPivot(['status', 'joined_at']);
+            ->withPivot(['joined_at']);
     }
 
     public function expenses(): HasMany

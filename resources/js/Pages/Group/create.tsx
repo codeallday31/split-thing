@@ -1,3 +1,4 @@
+import InputError from '@/Components/InputError';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -15,9 +16,9 @@ import { Head, useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
 
 interface GroupCreateState {
-    groupName: string;
-    groupDescription: string;
-    groupMembers: string[];
+    name: string;
+    description: string;
+    memberIds: string[];
 }
 
 interface IUser {
@@ -32,10 +33,10 @@ interface CreateProp {
 }
 
 export default function Create({ model }: CreateProp) {
-    const { data, setData, post } = useForm<GroupCreateState>({
-        groupName: '',
-        groupDescription: '',
-        groupMembers: [],
+    const { data, setData, post, errors } = useForm<GroupCreateState>({
+        name: '',
+        description: '',
+        memberIds: [],
     });
 
     const handleSubmit = (e: FormEvent) => {
@@ -44,7 +45,7 @@ export default function Create({ model }: CreateProp) {
     };
 
     const handleMultiSelectChange = (value: string[]) => {
-        setData('groupMembers', value);
+        setData('memberIds', value);
     };
 
     return (
@@ -69,10 +70,11 @@ export default function Create({ model }: CreateProp) {
                                     id="group-name"
                                     placeholder="trip to ..."
                                     onChange={(e) =>
-                                        setData('groupName', e.target.value)
+                                        setData('name', e.target.value)
                                     }
-                                    value={data.groupName}
+                                    value={data.name}
                                 />
+                                <InputError message={errors.name} />
                             </div>
 
                             <div className="grid gap-3">
@@ -83,11 +85,11 @@ export default function Create({ model }: CreateProp) {
                                     rows={5}
                                     onChange={(e) =>
                                         setData(
-                                            'groupDescription',
+                                            'description',
                                             e.currentTarget.value,
                                         )
                                     }
-                                    value={data.groupDescription}
+                                    value={data.description}
                                 />
                             </div>
                         </CardContent>
@@ -104,7 +106,7 @@ export default function Create({ model }: CreateProp) {
                             <MultiSelect
                                 options={model.users}
                                 onValueChange={handleMultiSelectChange}
-                                defaultValue={data.groupMembers}
+                                defaultValue={data.memberIds}
                                 placeholder="Select members"
                                 variant="inverted"
                                 maxCount={3}
@@ -112,7 +114,7 @@ export default function Create({ model }: CreateProp) {
                         </CardContent>
                     </Card>
                     <div>
-                        <Button>Save</Button>
+                        <Button type="submit">Save</Button>
                     </div>
                 </form>
             </div>

@@ -1,3 +1,4 @@
+import ClientList from '@/Components/client-list';
 import { Button } from '@/components/ui/button';
 import AuthenticatedLayout from '@/Layouts/authenticated-layout';
 import { Link } from '@inertiajs/react';
@@ -10,6 +11,7 @@ const Index = () => {
                     Groups you made
                 </h1>
             </div>
+            <ClientList />
             <div className="flex flex-1 items-center justify-center rounded-lg shadow-sm">
                 <div className="flex flex-col items-center gap-1 text-center">
                     <h3 className="text-2xl font-bold tracking-tight">

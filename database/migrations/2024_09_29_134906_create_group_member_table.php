@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Group::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->text('status')->default(MemberStatus::Unpaid->value);
+            // $table->text('status')->default(MemberStatus::Unpaid->value);
             $table->dateTime('joined_at')->useCurrent();
 
             $table->unique(['user_id', 'group_id']);
