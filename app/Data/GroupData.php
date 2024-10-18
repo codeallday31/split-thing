@@ -4,12 +4,9 @@ namespace App\Data;
 
 use App\Models\Group;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
-use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithoutValidation;
-use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Lazy;
@@ -26,8 +23,7 @@ class GroupData extends Data
         #[DataCollectionOf(MemberData::class)]
         public readonly optional|Lazy|DataCollection $members,
         #[WithoutValidation]
-        // #[WithCast(DateTimeInterfaceCast::class)]
-        public readonly string $created_at
+        public readonly optional|string $created_at,
     ) {}
 
     public static function fromRequest(Request $request): self
@@ -42,11 +38,13 @@ class GroupData extends Data
     {
         return self::from([
             ...$group->toArray(),
+            'memberIds' => $group->members->pluck('id')->map(fn ($id) => strval($id))->toArray(),
+            'created_at' => $group->created_at->format('F d, Y'),
             'members' => Lazy::whenLoaded(
                 'members',
                 $group,
                 fn () => MemberData::collect($group->members)
-            )
+            ),
         ]);
     }
 }

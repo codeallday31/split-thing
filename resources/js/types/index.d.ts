@@ -12,3 +12,10 @@ export type PageProps<
         user: User;
     };
 };
+
+interface Group {
+    id: number;
+    name: string;
+    created_at: string;
+    description: string;
+}

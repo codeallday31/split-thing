@@ -72,7 +72,7 @@ const AuthenticatedLayout = ({
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="left" className="flex flex-col">
-                                <nav className="grid gap-2 text-lg font-medium">
+                                <nav className="grid gap-2 font-medium">
                                     <Link
                                         href="#"
                                         className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"

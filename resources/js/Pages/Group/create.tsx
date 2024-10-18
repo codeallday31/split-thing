@@ -12,10 +12,12 @@ import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Textarea } from '@/components/ui/textarea';
 import AuthenticatedLayout from '@/Layouts/authenticated-layout';
+import { Group } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
 
 interface GroupCreateState {
+    id: number | null;
     name: string;
     description: string;
     memberIds: string[];
@@ -26,22 +28,32 @@ interface IUser {
     label: string;
 }
 
-interface CreateProp {
+interface IMember extends Group {
+    memberIds: string[];
+}
+
+interface Props {
     model: {
         users: IUser[];
+        group: IMember;
     };
 }
 
-export default function Create({ model }: CreateProp) {
-    const { data, setData, post, errors } = useForm<GroupCreateState>({
-        name: '',
-        description: '',
-        memberIds: [],
+export default function Create({ model }: Props) {
+    const { data, setData, post, errors, put } = useForm<GroupCreateState>({
+        id: model.group?.id,
+        name: model.group?.name ?? '',
+        description: model.group?.description ?? '',
+        memberIds: model.group?.memberIds ?? [],
     });
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        post(route('groups.store'));
+        if (model.group) {
+            put(route('groups.update', model.group.id));
+        } else {
+            post(route('groups.store'));
+        }
     };
 
     const handleMultiSelectChange = (value: string[]) => {

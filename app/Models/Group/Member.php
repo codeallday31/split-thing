@@ -3,9 +3,7 @@
 namespace App\Models\Group;
 
 use App\Models\Group;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -17,6 +15,4 @@ class Member extends Pivot
     {
         return $this->belongsToMany(Group::class);
     }
-
-
 }

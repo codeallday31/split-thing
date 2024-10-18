@@ -17,7 +17,7 @@ class GroupController
     public function index(): Response
     {
         return Inertia::render('Group/index', [
-            'model' => new GetGroupsViewModel()
+            'model' => new GetGroupsViewModel,
         ]);
     }
 
@@ -29,6 +29,20 @@ class GroupController
     }
 
     public function store(GroupData $data, Request $request): RedirectResponse
+    {
+        UpsertGroupAction::execute($data, $request->user());
+
+        return to_route('groups.index');
+    }
+
+    public function edit(Group $group)
+    {
+        return Inertia::render('Group/create', [
+            'model' => new UpsertGroupViewModel($group),
+        ]);
+    }
+
+    public function update(GroupData $data, Request $request): RedirectResponse
     {
         UpsertGroupAction::execute($data, $request->user());
 

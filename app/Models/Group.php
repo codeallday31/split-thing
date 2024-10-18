@@ -30,10 +30,6 @@ class Group extends Model
 
     protected $dataClass = GroupData::class;
 
-    protected $casts = [
-        'id' => 'integer',
-    ];
-
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_member')
