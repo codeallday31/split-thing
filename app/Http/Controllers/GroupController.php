@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\UpsertGroupAction;
 use App\Data\GroupData;
 use App\Models\Group;
+use App\ViewModels\GetGroupShowViewModel;
 use App\ViewModels\GetGroupsViewModel;
 use App\ViewModels\UpsertGroupViewModel;
 use Illuminate\Http\RedirectResponse;
@@ -33,6 +34,13 @@ class GroupController
         UpsertGroupAction::execute($data, $request->user());
 
         return to_route('groups.index');
+    }
+
+    public function show(Group $group): Response
+    {
+        return Inertia::render('Group/show', [
+            'model' => new GetGroupShowViewModel($group),
+        ]);
     }
 
     public function edit(Group $group)

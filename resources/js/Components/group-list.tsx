@@ -41,7 +41,11 @@ const GroupList = ({ groups }: Props) => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem>View</DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link href={route('groups.show', group.id)}>
+                                        View
+                                    </Link>
+                                </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
                                     <Link href={route('groups.edit', group.id)}>
                                         Edit
