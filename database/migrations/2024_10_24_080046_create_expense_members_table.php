@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\Group;
+use App\Models\Group\Expense;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,12 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expenses', function (Blueprint $table) {
+        Schema::create('expense_splits', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Group::class)->constrained()->cascadeOnDelete();
-            $table->string('description');
+            $table->foreignIdFor(Expense::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->decimal('amount', 15, 2);
-            $table->dateTime('date_of_expense');
+            $table->dateTime('payment_date')->useCurrent();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('expenses');
+        Schema::dropIfExists('expense_splits');
     }
 };
