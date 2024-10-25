@@ -22,28 +22,30 @@ interface Props {
 }
 
 const Create = ({ model }: Props) => {
-    const { data, setData, post } = useForm<{
-        group_id: number;
+    const { data, setData, post, transform } = useForm<{
         description: string;
         amount: string;
         dateOfExpense: string;
-        paidFor: string[];
+        memberIds: string[];
     }>({
-        group_id: model.group.id,
         description: '',
         amount: '',
         dateOfExpense: '2024-10-23',
-        paidFor: [],
+        memberIds: [],
     });
 
     const handleMultiSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const value = [...e.target.selectedOptions].map((o) => o.value);
-        setData('paidFor', value);
+        setData('memberIds', value);
     };
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        post(route('expenses.store', data.group_id));
+        transform((data) => ({
+            ...data,
+            groupId: model.group.id,
+        }));
+        post(route('expenses.store', model.group.id));
     };
 
     return (
@@ -70,7 +72,7 @@ const Create = ({ model }: Props) => {
                 <select
                     multiple
                     className="dark:bg-slate-700"
-                    value={data.paidFor}
+                    value={data.memberIds}
                     onChange={(e) => handleMultiSelectChange(e)}
                 >
                     {model.group.members.map((member) => (

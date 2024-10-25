@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Group::class)->constrained()->cascadeOnDelete();
             $table->string('description');
             $table->decimal('amount', 15, 2);
-            $table->dateTime('date_of_expense');
+            $table->date('date_of_expense');
             $table->timestamps();
         });
     }

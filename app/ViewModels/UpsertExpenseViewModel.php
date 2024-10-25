@@ -10,8 +10,7 @@ class UpsertExpenseViewModel extends ViewModel
     public function __construct(
         public readonly Group $group,
         public readonly ?Expense $expense = null,
-    ) {
-    }
+    ) {}
 
     public function group()
     {
