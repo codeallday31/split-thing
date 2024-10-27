@@ -1,7 +1,15 @@
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AuthenticatedLayout from '@/Layouts/authenticated-layout';
 import { Group } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { ChangeEvent, FormEvent } from 'react';
@@ -49,14 +57,66 @@ const Create = ({ model }: Props) => {
     };
 
     return (
-        <AuthenticatedLayout>
+        <>
             <form className="grid gap-6" onSubmit={handleSubmit}>
                 <Label>description</Label>
                 <Input
                     value={data.description}
                     onChange={(e) => setData('description', e.target.value)}
                 />
-                <Label>Amount</Label>
+                <div className="flex items-center">
+                    <Label>Amount</Label>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant="link"
+                                className="text-xs italic text-muted-foreground"
+                            >
+                                splitting options..
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Edit profile</DialogTitle>
+                                <DialogDescription>
+                                    Make changes to your profile here. Click
+                                    save when you're done.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="name"
+                                        className="text-right"
+                                    >
+                                        Name
+                                    </Label>
+                                    <Input
+                                        id="name"
+                                        value="Pedro Duarte"
+                                        className="col-span-3"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="username"
+                                        className="text-right"
+                                    >
+                                        Username
+                                    </Label>
+                                    <Input
+                                        id="username"
+                                        value="@peduarte"
+                                        className="col-span-3"
+                                    />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button type="submit">Save changes</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
                 <Input
                     value={data.amount}
                     onChange={(e) => setData('amount', e.target.value)}
@@ -68,7 +128,7 @@ const Create = ({ model }: Props) => {
                     onChange={(e) => setData('dateOfExpense', e.target.value)}
                 />
                 {/* <Text> */}
-                <Label>Member Involved</Label>
+                <Label>Split between</Label>
                 <select
                     multiple
                     className="dark:bg-slate-700"
@@ -84,7 +144,7 @@ const Create = ({ model }: Props) => {
 
                 <Button type="submit">Save</Button>
             </form>
-        </AuthenticatedLayout>
+        </>
     );
 };
 

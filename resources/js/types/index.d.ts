@@ -13,9 +13,16 @@ export type PageProps<
     };
 };
 
+// interface GroupOwner {
+//     id: number;
+//     name: string;
+// }
+
 interface Group {
     id: number;
     name: string;
     created_at: string;
     description: string;
+    user_id: ?number;
+    // owner: GroupOwner;
 }

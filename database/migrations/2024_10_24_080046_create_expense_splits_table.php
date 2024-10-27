@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignIdFor(Expense::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->decimal('amount', 15, 2);
-            $table->dateTime('payment_date')->useCurrent();
-            $table->timestamps();
+            $table->dateTime('payment_date')->nullable();
+            // $table->timestamps();
         });
     }
 

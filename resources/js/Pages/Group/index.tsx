@@ -1,6 +1,5 @@
 import GroupList from '@/components/group-list';
 import { Button } from '@/components/ui/button';
-import AuthenticatedLayout from '@/Layouts/authenticated-layout';
 import { Group } from '@/types';
 import { Link } from '@inertiajs/react';
 
@@ -14,11 +13,9 @@ interface Props {
 
 const Index = ({ model }: Props) => {
     return (
-        <AuthenticatedLayout headTitle="Group">
+        <>
             <div className="flex items-center">
-                <h1 className="text-lg font-semibold md:text-2xl">
-                    Groups you made
-                </h1>
+                <h1 className="text-lg font-semibold md:text-2xl">Groups</h1>
             </div>
             {model.has_groups ? (
                 <GroupList groups={model.groups} />
@@ -40,7 +37,7 @@ const Index = ({ model }: Props) => {
                     </div>
                 </div>
             )}
-        </AuthenticatedLayout>
+        </>
     );
 };
 

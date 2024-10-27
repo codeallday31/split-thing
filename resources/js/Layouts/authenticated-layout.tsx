@@ -22,6 +22,7 @@ const AuthenticatedLayout = ({
     children: React.ReactNode;
     headTitle?: string;
 }) => {
+    // console.log(route().current('dashboard'));
     return (
         <>
             <Head title={headTitle} />
@@ -39,7 +40,7 @@ const AuthenticatedLayout = ({
                         <div className="flex-1 overflow-auto">
                             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
                                 <Link
-                                    href="#"
+                                    href={route('dashboard')}
                                     className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                                 >
                                     <HomeIcon className="h-4 w-4" />
@@ -110,8 +111,13 @@ const AuthenticatedLayout = ({
                                 <DropdownMenuItem>Settings</DropdownMenuItem>
                                 <DropdownMenuItem>Support</DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
-                                    <Link href="#" className="w-full">
+                                <DropdownMenuItem asChild>
+                                    <Link
+                                        href={route('logout')}
+                                        method="post"
+                                        as="button"
+                                        className="w-full"
+                                    >
                                         Logout
                                     </Link>
                                 </DropdownMenuItem>

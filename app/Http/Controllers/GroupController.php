@@ -36,10 +36,13 @@ class GroupController
         return to_route('groups.index');
     }
 
-    public function show(Group $group): Response
+    public function show(Group $group, Request $request): Response
     {
         return Inertia::render('Group/show', [
             'model' => new GetGroupShowViewModel($group),
+            'can' => [
+                'create_expense' => $request->user()->can('createExpense', $group),
+            ],
         ]);
     }
 

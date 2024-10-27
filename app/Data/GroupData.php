@@ -3,12 +3,8 @@
 namespace App\Data;
 
 use App\Models\Group;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\WithoutValidation;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Lazy;
 use Spatie\LaravelData\Optional;
 
@@ -18,21 +14,14 @@ class GroupData extends Data
         public readonly ?int $id,
         public readonly string $name,
         public readonly ?string $description,
-        public readonly array|optional $memberIds,
+        public readonly array $memberIds,
         #[WithoutValidation]
-        #[DataCollectionOf(MemberData::class)]
-        public readonly optional|Lazy|DataCollection $members,
+        public readonly string|Optional $created_at,
         #[WithoutValidation]
-        public readonly optional|string $created_at,
+        public readonly int|Optional $user_id,
+        #[WithoutValidation]
+        public readonly ?Lazy $members
     ) {}
-
-    public static function fromRequest(Request $request): self
-    {
-        return self::from([
-            ...$request->all(),
-            'members' => MemberData::collect(User::whereIn('id', $request->collect('memberIds'))->get()),
-        ]);
-    }
 
     public static function fromModel(Group $group): self
     {
@@ -43,7 +32,7 @@ class GroupData extends Data
             'members' => Lazy::whenLoaded(
                 'members',
                 $group,
-                fn () => MemberData::collect($group->members)
+                fn () => UserData::collect($group->members)
             ),
         ]);
     }

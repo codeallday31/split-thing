@@ -5,8 +5,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { stringLimit } from '@/lib/utils';
 import { Group } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { MoreHorizontal } from 'lucide-react';
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const GroupList = ({ groups }: Props) => {
+    const auth = usePage().props.auth;
     return (
         <ul
             role="list"
@@ -30,7 +32,12 @@ const GroupList = ({ groups }: Props) => {
                             src="https://tailwindui.com/plus/img/logos/48x48/tuple.svg"
                             className="h-12 w-12 rounded-lg object-cover ring-1 ring-gray-900/10"
                         />
-                        <div className="text-sm font-medium">{group.name}</div>
+                        <div className="text-sm font-medium">
+                            {group.name}
+                            <p className="text-xs text-muted-foreground">
+                                {stringLimit(group.description, 50)}
+                            </p>
+                        </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
@@ -47,28 +54,41 @@ const GroupList = ({ groups }: Props) => {
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
-                                    <Link href={route('groups.edit', group.id)}>
-                                        Edit
-                                    </Link>
+                                    {group.user_id === auth.user.id && (
+                                        <Link
+                                            href={route(
+                                                'groups.edit',
+                                                group.id,
+                                            )}
+                                        >
+                                            Edit
+                                        </Link>
+                                    )}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <dl className="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
+                    <dl className="-my-3 divide-y divide-gray-300 px-6 py-4 text-sm leading-6">
+                        {/* <div className="flex justify-between gap-x-4 py-3">
+                            <dt className="text-muted-foreground">
+                                Group Owner
+                            </dt>
+                            <dd className="flex items-start gap-x-2">
+                                <div className="font-medium">
+                                    {group.owner.id === authUser.id
+                                        ? 'Me'
+                                        : group.owner.name}
+                                </div>
+                            </dd>
+                        </div> */}
                         <div className="flex justify-between gap-x-4 py-3">
                             <dt className="text-muted-foreground">
-                                Date of Creation
+                                Date created
                             </dt>
                             <dd className="text-foreground">
                                 <time>{group.created_at}</time>
                             </dd>
                         </div>
-                        {/* <div className="flex justify-between gap-x-4 py-3">
-                            <dt className="text-muted-foreground">Balance</dt>
-                            <dd className="flex items-start gap-x-2">
-                                <div className="font-medium">P 10000</div>
-                            </dd>
-                        </div> */}
                     </dl>
                 </li>
             ))}

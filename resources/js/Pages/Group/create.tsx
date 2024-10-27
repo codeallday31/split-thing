@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Textarea } from '@/components/ui/textarea';
-import AuthenticatedLayout from '@/Layouts/authenticated-layout';
 import { Group } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
@@ -61,7 +60,7 @@ export default function Create({ model }: Props) {
     };
 
     return (
-        <AuthenticatedLayout>
+        <>
             <Head title="Group" />
             <div>
                 <form className="grid gap-6" onSubmit={handleSubmit}>
@@ -130,6 +129,6 @@ export default function Create({ model }: Props) {
                     </div>
                 </form>
             </div>
-        </AuthenticatedLayout>
+        </>
     );
 }

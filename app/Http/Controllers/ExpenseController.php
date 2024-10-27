@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateExpenseAction;
 use App\Data\ExpenseData;
 use App\Models\Group;
 use App\ViewModels\UpsertExpenseViewModel;
@@ -12,6 +13,7 @@ class ExpenseController
 {
     public function create(Group $group)
     {
+
         return Inertia::render('Expense/create', [
             'model' => new UpsertExpenseViewModel($group),
         ]);
@@ -19,6 +21,6 @@ class ExpenseController
 
     public function store(ExpenseData $data, Request $request)
     {
-        dd($data);
+        CreateExpenseAction::execute($data);
     }
 }

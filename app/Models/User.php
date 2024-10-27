@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Data\UserData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\LaravelData\WithData;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+    use WithData;
 
     /**
      * The attributes that are mass assignable.
@@ -46,10 +49,12 @@ class User extends Authenticatable
         ];
     }
 
+    protected $dataClass = UserData::class;
+
     public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'group_member')
-            ->withPivot('status');
+            ->withPivot('joined_at');
     }
 
     public function created_groups(): HasMany

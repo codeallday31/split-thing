@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Data\GroupData;
-use App\Models\Concerns\HasUser;
 use App\Models\Group\Expense;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +12,7 @@ use Spatie\LaravelData\WithData;
 
 class Group extends Model
 {
-    use HasFactory, HasUser;
+    use HasFactory;
     use WithData;
 
     /**
