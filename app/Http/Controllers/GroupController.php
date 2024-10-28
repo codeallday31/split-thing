@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Actions\UpsertGroupAction;
 use App\Data\GroupData;
 use App\Models\Group;
+use App\Models\Group\Expense;
 use App\ViewModels\GetGroupShowViewModel;
 use App\ViewModels\GetGroupsViewModel;
 use App\ViewModels\UpsertGroupViewModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -41,13 +43,20 @@ class GroupController
         return Inertia::render('Group/show', [
             'model' => new GetGroupShowViewModel($group),
             'can' => [
-                'create_expense' => $request->user()->can('createExpense', $group),
+                'create_expense' => $request->user()->can('create', [Expense::class, $group]),
             ],
         ]);
     }
 
+    /**
+     * Update the given blog post.
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function edit(Group $group)
     {
+        Gate::authorize('modify', $group);
+
         return Inertia::render('Group/create', [
             'model' => new UpsertGroupViewModel($group),
         ]);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ExpenseStatus;
 use App\Models\Group;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,6 +19,7 @@ return new class extends Migration
             $table->string('description');
             $table->decimal('amount', 15, 2);
             $table->dateTime('expense_date');
+            $table->string('status')->default(ExpenseStatus::Pending->value);
             $table->timestamps();
         });
     }

@@ -1,18 +1,10 @@
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Group } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { ChangeEvent, FormEvent } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import FormDialog from './partials/form-dialog';
 
 interface Member {
     id: number;
@@ -30,6 +22,7 @@ interface Props {
 }
 
 const Create = ({ model }: Props) => {
+    const [open, setOpen] = useState(false);
     const { data, setData, post, transform } = useForm<{
         description: string;
         amount: string;
@@ -53,7 +46,11 @@ const Create = ({ model }: Props) => {
             ...data,
             groupId: model.group.id,
         }));
-        post(route('expenses.store', model.group.id));
+        post(route('expenses.store', model.group.id), {
+            onSuccess: () => {
+                setOpen(true);
+            },
+        });
     };
 
     return (
@@ -66,56 +63,6 @@ const Create = ({ model }: Props) => {
                 />
                 <div className="flex items-center">
                     <Label>Amount</Label>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button
-                                variant="link"
-                                className="text-xs italic text-muted-foreground"
-                            >
-                                splitting options..
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                            <DialogHeader>
-                                <DialogTitle>Edit profile</DialogTitle>
-                                <DialogDescription>
-                                    Make changes to your profile here. Click
-                                    save when you're done.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label
-                                        htmlFor="name"
-                                        className="text-right"
-                                    >
-                                        Name
-                                    </Label>
-                                    <Input
-                                        id="name"
-                                        value="Pedro Duarte"
-                                        className="col-span-3"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label
-                                        htmlFor="username"
-                                        className="text-right"
-                                    >
-                                        Username
-                                    </Label>
-                                    <Input
-                                        id="username"
-                                        value="@peduarte"
-                                        className="col-span-3"
-                                    />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <Button type="submit">Save changes</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
                 </div>
                 <Input
                     value={data.amount}
@@ -142,8 +89,9 @@ const Create = ({ model }: Props) => {
                     ))}
                 </select>
 
-                <Button type="submit">Save</Button>
+                <Button type="submit">Create</Button>
             </form>
+            <FormDialog open={open} setOpen={setOpen} />
         </>
     );
 };

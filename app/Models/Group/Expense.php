@@ -2,6 +2,7 @@
 
 namespace App\Models\Group;
 
+use App\Enums\ExpenseStatus;
 use App\Models\ExpenseSplit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,18 @@ class Expense extends Model
         'description',
         'amount',
         'expense_date',
+        'status',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => ExpenseStatus::class,
+        ];
+    }
 
     public function splits(): HasMany
     {
