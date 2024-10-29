@@ -22,7 +22,7 @@ class ExpenseController
         ]);
     }
 
-    public function store(ExpenseData $data, Request $request)
+    public function store(ExpenseData $data)
     {
         CreateExpenseAction::execute($data);
     }

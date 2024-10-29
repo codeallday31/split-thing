@@ -9,6 +9,7 @@ class CreateExpenseAction
 {
     public static function execute(ExpenseData $data)
     {
+        // dd($data->split_method->create());
         $expense = Expense::updateOrCreate(
             [
                 'group_id' => $data->group_id,
@@ -18,15 +19,19 @@ class CreateExpenseAction
                 'expense_date' => $data->date_of_expense,
             ]);
 
-        $expense->splits->each->delete();
+        dump($expense);
+        dump(Expense::whereId($expense->id)->first());
+        dd('finished');
 
-        $splits = collect($data->member_ids)->map(function ($id): array {
-            return [
-                'user_id' => $id,
-                'amount' => 0,
-            ];
-        });
+        // $data->split_method->create($expense);
 
-        $expense->splits()->createMany($splits->toArray());
+        // $splits = collect($data->member_ids)->map(function ($id): array {
+        //     return [
+        //         'user_id' => $id,
+        //         'amount' => 0,
+        //     ];
+        // });
+
+        // $expense->splits()->createMany($splits->toArray());
     }
 }

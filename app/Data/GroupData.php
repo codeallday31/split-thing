@@ -3,6 +3,7 @@
 namespace App\Data;
 
 use App\Models\Group;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\WithoutValidation;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Lazy;
@@ -10,6 +11,9 @@ use Spatie\LaravelData\Optional;
 
 class GroupData extends Data
 {
+    /**
+    * @param Collection<UserData>|Lazy $participants
+    */
     public function __construct(
         public readonly ?int $id,
         public readonly string $name,
@@ -18,9 +22,7 @@ class GroupData extends Data
         #[WithoutValidation]
         public readonly string|Optional $created_at,
         #[WithoutValidation]
-        public readonly int|Optional $user_id,
-        #[WithoutValidation]
-        public readonly ?Lazy $members
+        public readonly ?Lazy $members,
     ) {}
 
     public static function fromModel(Group $group): self
