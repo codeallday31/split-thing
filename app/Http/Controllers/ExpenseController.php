@@ -8,7 +8,7 @@ use App\Models\Group;
 use App\Models\Group\Expense;
 use App\ViewModels\UpsertExpenseViewModel;
 use Gate;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 
 class ExpenseController
@@ -22,8 +22,10 @@ class ExpenseController
         ]);
     }
 
-    public function store(ExpenseData $data)
+    public function store(ExpenseData $data): RedirectResponse
     {
-        CreateExpenseAction::execute($data);
+        $expense = CreateExpenseAction::execute($data);
+
+        return to_route('groups.show', $expense->group->id);
     }
 }

@@ -15,14 +15,6 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-// export function conditionalClass(...inputs: ClassValue[]) {
-//     return clsx(
-//         'bg-blue-500',
-//         condition && 'text-white',
-//         condition && 'font-bold',
-//     );
-// }
-
 export function stringLimit(
     value: string,
     limit: number = 100,
@@ -60,3 +52,23 @@ export function stringLimit(
 
     return truncated.substring(0, lastSpace) + end;
 }
+
+/**
+ * roundTo(123.456, 2);  // 123.46
+ * roundTo(123.3210, 2);  // 123.32
+ * roundTo(123.456, 1);  // 123.5
+ * roundTo(123, 2);  // 123
+ *
+ * https://www.reddit.com/r/typescript/comments/efid2b/comment/fc1jusw/
+ */
+export function roundTo(num: number, places: number) {
+    const factor = 10 ** places;
+    return Math.round(num * factor) / factor;
+}
+
+export const calculateSplit = (amount: number, participants: number) => {
+    const amountInCents = Math.round(amount * 100);
+    const splitAmountInCents = Math.floor(amountInCents / participants);
+
+    return roundTo(splitAmountInCents / 100, 2);
+};

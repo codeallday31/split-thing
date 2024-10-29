@@ -3,35 +3,37 @@
 namespace App\Actions;
 
 use App\Data\ExpenseData;
+use App\Data\SplitData;
+use App\Data\UserData;
 use App\Models\Group\Expense;
+use App\Models\User;
 
 class CreateExpenseAction
 {
-    public static function execute(ExpenseData $data)
+    public static function execute(ExpenseData $data): Expense
     {
-        // dd($data->split_method->create());
         $expense = Expense::updateOrCreate(
             [
+                'id' => $data->expense_id,
+            ],
+            [
                 'group_id' => $data->group_id,
-            ], [
                 'description' => $data->description,
                 'amount' => $data->amount,
-                'expense_date' => $data->date_of_expense,
-            ]);
+                'expense_date' => $data->expense_date,
+                'paid_by' => $data->paid_by,
+                'split_method' => $data->split_method,
+            ]
+        );
 
-        dump($expense);
-        dump(Expense::whereId($expense->id)->first());
-        dd('finished');
+        $expense->splits->each->delete();
 
-        // $data->split_method->create($expense);
+        $splitMethod = $data->split_method->createExpenseSplit();
+        $splitMethod($expense, SplitData::from([
+            ...$data->toArray(),
+            'participants' => UserData::collect(User::whereIn('id', $data->participants)->get()),
+        ]));
 
-        // $splits = collect($data->member_ids)->map(function ($id): array {
-        //     return [
-        //         'user_id' => $id,
-        //         'amount' => 0,
-        //     ];
-        // });
-
-        // $expense->splits()->createMany($splits->toArray());
+        return $expense->load('group');
     }
 }

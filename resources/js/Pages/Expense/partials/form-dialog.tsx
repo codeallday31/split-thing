@@ -26,8 +26,6 @@ const FormDialog = ({ open, setOpen }: Props) => {
         percentage: 'Split using custom percentages for each participant',
     } as { [key: string]: string };
 
-    console.log('bobo kaba');
-
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent>

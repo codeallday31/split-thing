@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\Group\MemberStatus;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;

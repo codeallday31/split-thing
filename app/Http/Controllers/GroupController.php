@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Actions\UpsertGroupAction;
 use App\Data\GroupData;
 use App\Models\Group;
-use App\Models\Group\Expense;
 use App\ViewModels\GetGroupShowViewModel;
 use App\ViewModels\GetGroupsViewModel;
 use App\ViewModels\UpsertGroupViewModel;
@@ -42,9 +41,6 @@ class GroupController
     {
         return Inertia::render('Group/show', [
             'model' => new GetGroupShowViewModel($group),
-            'can' => [
-                'create_expense' => $request->user()->can('create', [Expense::class, $group]),
-            ],
         ]);
     }
 

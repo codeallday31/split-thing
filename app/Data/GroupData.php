@@ -12,8 +12,8 @@ use Spatie\LaravelData\Optional;
 class GroupData extends Data
 {
     /**
-    * @param Collection<UserData>|Lazy $participants
-    */
+     * @param  Collection<UserData>|Lazy  $participants
+     */
     public function __construct(
         public readonly ?int $id,
         public readonly string $name,

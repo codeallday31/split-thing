@@ -2,7 +2,7 @@
 
 namespace App\Models\Group;
 
-use App\Enums\ExpenseStatus;
+use App\Enums\ExpenseSplitMethod;
 use App\Models\ExpenseSplit;
 use App\Models\Group;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +19,8 @@ class Expense extends Model
         'description',
         'amount',
         'expense_date',
-        'status',
+        'paid_by',
+        'split_method',
     ];
 
     /**
@@ -28,7 +29,7 @@ class Expense extends Model
     protected function casts(): array
     {
         return [
-            'status' => ExpenseStatus::class,
+            'split_method' => ExpenseSplitMethod::class,
         ];
     }
 

@@ -43,15 +43,15 @@ const Create = ({ model }: Props) => {
     ];
     const { data, setData, post, transform } = useForm<{
         description: string;
-        amount: string;
-        dateOfExpense: string;
+        amount: number;
+        expenseDate: string;
         paidBy: string;
         splitMethod: string;
         participants: number[];
     }>({
         description: '',
-        amount: '',
-        dateOfExpense: '2024-10-23',
+        amount: 0,
+        expenseDate: '2024-10-23',
         paidBy: '',
         splitMethod: 'equally',
         participants: participants.map((a) => a.id),
@@ -88,8 +88,8 @@ const Create = ({ model }: Props) => {
                     id="expense-date"
                     name="expense-date"
                     type="date"
-                    value={data.dateOfExpense}
-                    onChange={(e) => setData('dateOfExpense', e.target.value)}
+                    value={data.expenseDate}
+                    onChange={(e) => setData('expenseDate', e.target.value)}
                 />
                 <Label>Paid by</Label>
                 <Select

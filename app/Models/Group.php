@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Data\GroupData;
-use App\Data\UserData;
 use App\Models\Group\Expense;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

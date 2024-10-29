@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { stringLimit } from '@/lib/utils';
 import { Group } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { MoreHorizontal } from 'lucide-react';
 
 interface Props {
@@ -15,7 +15,6 @@ interface Props {
 }
 
 const GroupList = ({ groups }: Props) => {
-    const auth = usePage().props.auth;
     return (
         <ul
             role="list"
@@ -54,16 +53,9 @@ const GroupList = ({ groups }: Props) => {
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
-                                    {group.user_id === auth.user.id && (
-                                        <Link
-                                            href={route(
-                                                'groups.edit',
-                                                group.id,
-                                            )}
-                                        >
-                                            Edit
-                                        </Link>
-                                    )}
+                                    <Link href={route('groups.edit', group.id)}>
+                                        Edit
+                                    </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

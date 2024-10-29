@@ -2,7 +2,7 @@
 
 namespace App\Data;
 
-use App\Enums\ExpenseSplitMethods;
+use App\Enums\ExpenseSplitMethod;
 use Carbon\Carbon;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -15,14 +15,15 @@ use Spatie\LaravelData\Mappers\CamelCaseMapper;
 class ExpenseData extends Data
 {
     public function __construct(
+        public readonly ?int $expense_id,
         public readonly int $group_id,
         public readonly string $description,
-        public readonly int $amount,
+        public readonly float $amount,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]
-        public readonly Carbon $date_of_expense,
+        public readonly Carbon $expense_date,
         public readonly string $paid_by,
         #[WithCast(EnumCast::class)]
-        public readonly ExpenseSplitMethods $split_method,
+        public readonly ExpenseSplitMethod $split_method,
         public readonly array $participants
         // public readonly array $member_ids,
         // #[WithoutValidation]
