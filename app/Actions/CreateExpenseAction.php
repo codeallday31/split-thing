@@ -3,10 +3,7 @@
 namespace App\Actions;
 
 use App\Data\ExpenseData;
-use App\Data\SplitData;
-use App\Data\UserData;
 use App\Models\Group\Expense;
-use App\Models\User;
 
 class CreateExpenseAction
 {
@@ -29,10 +26,7 @@ class CreateExpenseAction
         $expense->splits->each->delete();
 
         $splitMethod = $data->split_method->createExpenseSplit();
-        $splitMethod($expense, SplitData::from([
-            ...$data->toArray(),
-            'participants' => UserData::collect(User::whereIn('id', $data->participants)->get()),
-        ]));
+        $splitMethod($expense, $data);
 
         return $expense->load('group');
     }

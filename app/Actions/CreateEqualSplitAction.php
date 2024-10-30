@@ -2,22 +2,23 @@
 
 namespace App\Actions;
 
+use App\Data\ExpenseData;
 use App\Data\SplitData;
 use App\Data\UserData;
 use App\Models\Group\Expense;
 
 class CreateEqualSplitAction
 {
-    public function __invoke(Expense $expense, SplitData $data)
+    public function __invoke(Expense $expense, ExpenseData $data)
     {
         $amountInCents = round($data->amount * 100);
-        $splitAmountInCents = floor($amountInCents / count($data->participants));
+        $splitAmountInCents = floor($amountInCents / $data->participants->count());
 
-        $amount = round($splitAmountInCents / 100, 2);
+        $splitAmount = round($splitAmountInCents / 100, 2);
 
-        $expenseDistribution = $data->participants->map(fn (UserData $participant) => [
+        $expenseDistribution = $data->participants->map(fn ($participant) => [
             'user_id' => $participant->id,
-            'amount' => $amount,
+            'amount' => $splitAmount
         ]);
 
         $expense->splits()->createMany($expenseDistribution->toArray());

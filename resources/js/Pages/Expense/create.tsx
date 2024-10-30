@@ -28,6 +28,11 @@ interface SplitOption {
     value: string;
 }
 
+interface ExpenseParticipant extends Member {
+    isSelected: boolean;
+    value: string | number;
+}
+
 interface Props {
     model: {
         group: IGroup;
@@ -37,24 +42,29 @@ interface Props {
 
 const Create = ({ model }: Props) => {
     const { auth } = usePage().props;
-    const participants = [
+    const groupMembers = [
         { id: auth.user.id, name: 'Me' },
         ...model.group.members,
     ];
+
     const { data, setData, post, transform } = useForm<{
         description: string;
         amount: string | number;
         expenseDate: string;
         payerId: string;
         splitMethod: string;
-        participants: number[];
+        participants: ExpenseParticipant[];
     }>({
         description: '',
         amount: 0,
         expenseDate: '2024-10-23',
         payerId: '',
         splitMethod: 'equally',
-        participants: participants.map((a) => a.id),
+        participants: groupMembers.map((member) => ({
+            ...member,
+            isSelected: true,
+            value: 0,
+        })),
     });
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -63,7 +73,31 @@ const Create = ({ model }: Props) => {
             ...data,
             groupId: model.group.id,
         }));
+
         post(route('expenses.store', model.group.id));
+    };
+
+    const handleSelectParticipantChange = (
+        isChecked: boolean,
+        memberId: number,
+    ) => {
+        setData(
+            'participants',
+            data.participants.map((participant) =>
+                participant.id === memberId
+                    ? { ...participant, isSelected: isChecked, value: 0 }
+                    : participant,
+            ),
+        );
+    };
+
+    const handleSplitValueChange = (id: number, value: number | string) => {
+        setData(
+            'participants',
+            data.participants.map((participant) =>
+                participant.id === id ? { ...participant, value } : participant,
+            ),
+        );
     };
 
     return (
@@ -77,8 +111,7 @@ const Create = ({ model }: Props) => {
                     onChange={(e) => setData('description', e.target.value)}
                 />
                 <Label htmlFor="amount">Amount</Label>
-                <input
-                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                <Input
                     type="number"
                     id="amount"
                     name="amount"
@@ -104,7 +137,7 @@ const Create = ({ model }: Props) => {
                         <SelectValue placeholder="Select who paid for" />
                     </SelectTrigger>
                     <SelectContent>
-                        {participants.map((member) => (
+                        {groupMembers.map((member) => (
                             <SelectItem
                                 value={member.id.toString()}
                                 key={member.id}
@@ -116,7 +149,86 @@ const Create = ({ model }: Props) => {
                 </Select>
                 <Label>Split between</Label>
                 <div className="divide-y divide-gray-800 border-b border-t border-gray-800">
-                    {participants.map((member) => (
+                    {data.participants.map((p) => (
+                        <div
+                            key={p.id}
+                            className="items-star-2 relative flex py-4"
+                        >
+                            <div className="min-w-0 flex-1 text-sm leading-6">
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id={`participant-${p.id}`}
+                                        checked={p.isSelected}
+                                        onCheckedChange={(isChecked) =>
+                                            handleSelectParticipantChange(
+                                                !!isChecked,
+                                                p.id,
+                                            )
+                                        }
+                                    />
+                                    <Label
+                                        htmlFor={`participant-${p.id}`}
+                                        className="select-none font-medium"
+                                    >
+                                        {p.name}
+                                    </Label>
+                                </div>
+                            </div>
+
+                            <div className="ml-3 flex h-6 items-center">
+                                {data.splitMethod !== 'equally' && (
+                                    <Input
+                                        type="number"
+                                        id={`participant-${p.id}`}
+                                        name="amount"
+                                        min={0}
+                                        step={0.01}
+                                        disabled={!p.isSelected}
+                                        value={p.value}
+                                        onChange={(e) =>
+                                            handleSplitValueChange(
+                                                p.id,
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                )}
+                                {/* {data.splitMethod === 'equally' ? (
+                                    <Checkbox
+                                        checked={data.participants.includes(
+                                            member.id,
+                                        )}
+                                        id={`participant-${member.id}`}
+                                        onCheckedChange={(isChecked) => {
+                                            const value = isChecked
+                                                ? [
+                                                      ...data.participants,
+                                                      member.id,
+                                                  ]
+                                                : data.participants.filter(
+                                                      (participant) =>
+                                                          participant !==
+                                                          member.id,
+                                                  );
+
+                                            setData('participants', value);
+                                        }}
+                                    />
+                                ) : (
+                                    <Input
+                                        type="number"
+                                        id={`participant-${member.id}`}
+                                        name="amount"
+                                        min={0}
+                                        step={0.01}
+                                    />
+                                )} */}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                {/* <div className="divide-y divide-gray-800 border-b border-t border-gray-800">
+                    {groupMembers.map((member) => (
                         <div
                             key={member.id}
                             className="items-star-2 relative flex py-4"
@@ -153,14 +265,17 @@ const Create = ({ model }: Props) => {
                                     />
                                 ) : (
                                     <Input
-                                        className="text-right"
+                                        type="number"
                                         id={`participant-${member.id}`}
+                                        name="amount"
+                                        min={0}
+                                        step={0.01}
                                     />
                                 )}
                             </div>
                         </div>
                     ))}
-                </div>
+                </div> */}
                 <Label className="text-sm italic">Splitting options..</Label>
                 <RadioGroup
                     value={data.splitMethod}

@@ -4,6 +4,7 @@ namespace App\Data;
 
 use App\Enums\ExpenseSplitMethod;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
@@ -14,6 +15,9 @@ use Spatie\LaravelData\Mappers\CamelCaseMapper;
 #[MapInputName(CamelCaseMapper::class)]
 class ExpenseData extends Data
 {
+    /**
+     * @param  Collection<int, ExpenseParticipantData>  $participants
+     */
     public function __construct(
         public readonly ?int $expense_id,
         public readonly int $group_id,
@@ -24,9 +28,6 @@ class ExpenseData extends Data
         public readonly int $payer_id,
         #[WithCast(EnumCast::class)]
         public readonly ExpenseSplitMethod $split_method,
-        public readonly array $participants
-        // public readonly array $member_ids,
-        // #[WithoutValidation]
-        // public readonly DataCollection|Lazy $members
+        public readonly Collection $participants
     ) {}
 }
