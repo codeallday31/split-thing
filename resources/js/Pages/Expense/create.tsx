@@ -43,16 +43,16 @@ const Create = ({ model }: Props) => {
     ];
     const { data, setData, post, transform } = useForm<{
         description: string;
-        amount: number;
+        amount: string | number;
         expenseDate: string;
-        paidBy: string;
+        payerId: string;
         splitMethod: string;
         participants: number[];
     }>({
         description: '',
         amount: 0,
         expenseDate: '2024-10-23',
-        paidBy: '',
+        payerId: '',
         splitMethod: 'equally',
         participants: participants.map((a) => a.id),
     });
@@ -77,9 +77,13 @@ const Create = ({ model }: Props) => {
                     onChange={(e) => setData('description', e.target.value)}
                 />
                 <Label htmlFor="amount">Amount</Label>
-                <Input
+                <input
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    type="number"
                     id="amount"
                     name="amount"
+                    min={0}
+                    step={0.01}
                     value={data.amount}
                     onChange={(e) => setData('amount', e.target.value)}
                 />
@@ -93,8 +97,8 @@ const Create = ({ model }: Props) => {
                 />
                 <Label>Paid by</Label>
                 <Select
-                    value={data.paidBy}
-                    onValueChange={(value) => setData('paidBy', value)}
+                    value={data.payerId}
+                    onValueChange={(value) => setData('payerId', value)}
                 >
                     <SelectTrigger>
                         <SelectValue placeholder="Select who paid for" />

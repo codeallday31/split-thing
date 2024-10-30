@@ -4,7 +4,6 @@ namespace App\ViewModels;
 
 use App\Data\GroupData;
 use App\Models\Group;
-use App\Models\User;
 use Illuminate\Support\Collection;
 
 final class GetGroupsViewModel extends ViewModel

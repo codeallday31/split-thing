@@ -21,7 +21,7 @@ class ExpenseData extends Data
         public readonly float $amount,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]
         public readonly Carbon $expense_date,
-        public readonly string $paid_by,
+        public readonly int $payer_id,
         #[WithCast(EnumCast::class)]
         public readonly ExpenseSplitMethod $split_method,
         public readonly array $participants

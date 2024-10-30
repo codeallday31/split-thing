@@ -19,7 +19,7 @@ class Expense extends Model
         'description',
         'amount',
         'expense_date',
-        'paid_by',
+        'payer_id',
         'split_method',
     ];
 

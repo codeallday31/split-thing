@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
             $table->dateTime('expense_date');
             // $table->string('status')->default(ExpenseStatus::Pending->value);
-            $table->foreignIdFor(User::class, 'paid_by')->constrained()->nullOnDelete();
+            $table->foreignIdFor(User::class, 'payer_id')->constrained('users')->nullOnDelete();
             $table->string('split_method');
             $table->timestamps();
         });
