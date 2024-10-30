@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\SplitMethodActions;
 
 use App\Data\ExpenseData;
 use App\Data\ExpenseParticipantData;
 use App\Models\Group\Expense;
 
-class CreateSplitByPercentageAction
+class PercentageBasedAction
 {
     public function __invoke(Expense $expense, ExpenseData $data)
     {

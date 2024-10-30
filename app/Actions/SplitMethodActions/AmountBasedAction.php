@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\SplitMethodActions;
 
 use App\Data\ExpenseData;
 use App\Models\Group\Expense;
 
-class CreateExpenseSplitByAmountAction
+class AmountBasedAction
 {
     public function __invoke(Expense $expense, ExpenseData $data)
     {

@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-use App\Actions\CreateEqualSplitAction;
-use App\Actions\CreateExpenseSplitByAmountAction;
-use App\Actions\CreateSplitByPercentageAction;
-use App\Actions\CreateSplitByShareAction;
+use App\Actions\SplitMethodActions\AmountBasedAction;
+use App\Actions\SplitMethodActions\EqualAction;
+use App\Actions\SplitMethodActions\PercentageBasedAction;
+use App\Actions\SplitMethodActions\ShareBasedAction;
 
 enum ExpenseSplitMethod: string
 {
@@ -17,10 +17,10 @@ enum ExpenseSplitMethod: string
     public function createExpenseSplit()
     {
         return match ($this) {
-            self::Equally => app(CreateEqualSplitAction::class) ,
-            self::Amount => app(CreateExpenseSplitByAmountAction::class),
-            self::Percentage => app(CreateSplitByPercentageAction::class),
-            self::Share => app(CreateSplitByShareAction::class)
+            self::Equally => app(EqualAction::class) ,
+            self::Amount => app(AmountBasedAction::class),
+            self::Percentage => app(PercentageBasedAction::class),
+            self::Share => app(ShareBasedAction::class)
         };
     }
 }
