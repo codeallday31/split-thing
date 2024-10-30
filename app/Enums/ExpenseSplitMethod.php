@@ -3,6 +3,9 @@
 namespace App\Enums;
 
 use App\Actions\CreateEqualSplitAction;
+use App\Actions\CreateExpenseSplitByAmountAction;
+use App\Actions\CreateSplitByPercentageAction;
+use App\Actions\CreateSplitByShareAction;
 
 enum ExpenseSplitMethod: string
 {
@@ -15,9 +18,9 @@ enum ExpenseSplitMethod: string
     {
         return match ($this) {
             self::Equally => app(CreateEqualSplitAction::class) ,
-            self::Amount => dd('this is from amount'),
-            self::Percentage => dd('this is from percentage'),
-            self::Share => dd('this is from share'),
+            self::Amount => app(CreateExpenseSplitByAmountAction::class),
+            self::Percentage => app(CreateSplitByPercentageAction::class),
+            self::Share => app(CreateSplitByShareAction::class)
         };
     }
 }
