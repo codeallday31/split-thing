@@ -3,14 +3,18 @@
 namespace App\Data;
 
 use App\Enums\ExpenseSplitMethod;
+use App\Rules\SplitMethodRule;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\CamelCaseMapper;
+use Spatie\LaravelData\Support\Validation\ValidationContext;
 
 #[MapInputName(CamelCaseMapper::class)]
 class ExpenseData extends Data
@@ -30,4 +34,32 @@ class ExpenseData extends Data
         public readonly ExpenseSplitMethod $split_method,
         public readonly Collection $participants
     ) {}
+
+    // public static function fromRequest(Request $request): self
+    // {
+    //     Collection::macro('onlySelected', fn () => $this->filter(fn ($participant) => $participant->is_selected) );
+
+    //     ExpenseParticipantData::collect($request->participants, Collection::class)
+    //         ->when($request->splitMethod)
+    //     dd($request->splitMethod);
+
+    //     return self::from([
+    //         ...$request->all(),
+    //         // 'participants' => self::from($r)
+    //     ]);
+    // }
+
+    public static function rules(ValidationContext $context): array
+    {
+        return [
+            'participants' => [
+                'array',
+                'required',
+                Rule::when(
+                    is_numeric($context->fullPayload['amount']),
+                    new SplitMethodRule
+                ),
+            ],
+        ];
+    }
 }

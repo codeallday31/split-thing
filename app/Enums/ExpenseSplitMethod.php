@@ -17,7 +17,7 @@ enum ExpenseSplitMethod: string
     public function createExpenseSplit()
     {
         return match ($this) {
-            self::Equally => app(EqualAction::class) ,
+            self::Equally => app(EqualAction::class),
             self::Amount => app(AmountBasedAction::class),
             self::Percentage => app(PercentageBasedAction::class),
             self::Share => app(ShareBasedAction::class)
