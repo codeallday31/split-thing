@@ -10,17 +10,14 @@ class ShareBasedAction
 {
     public function __invoke(Expense $expense, ExpenseData $data)
     {
-        $participants = $data->participants->filter(fn ($participant) => $participant->is_selected);
+        $totalShares = $data->participants->sum(fn ($particpant) => $particpant->value);
 
-        $totalShares = $participants->sum(fn ($particpant) => $particpant->value);
-
-        $expenseDistribution = $participants
-            ->map(fn ($participant) => [
+        $expense->splits()->createMany(
+            $data->participants->map(fn ($participant) => [
                 'user_id' => $participant->id,
                 'amount' => $this->calculate($expense->amount, $totalShares, $participant),
-            ]);
-
-        $expense->splits()->createMany($expenseDistribution);
+            ]),
+        );
     }
 
     private function calculate(float $amount, float $totalShares, ExpenseParticipantData $participant): float

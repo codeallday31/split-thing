@@ -35,19 +35,15 @@ class ExpenseData extends Data
         public readonly Collection $participants
     ) {}
 
-    // public static function fromRequest(Request $request): self
-    // {
-    //     Collection::macro('onlySelected', fn () => $this->filter(fn ($participant) => $participant->is_selected) );
+    public static function fromRequest(Request $request): self
+    {
+        $participants = ExpenseSplitMethod::from($request->splitMethod)->filterParticipants($request->participants);
 
-    //     ExpenseParticipantData::collect($request->participants, Collection::class)
-    //         ->when($request->splitMethod)
-    //     dd($request->splitMethod);
-
-    //     return self::from([
-    //         ...$request->all(),
-    //         // 'participants' => self::from($r)
-    //     ]);
-    // }
+        return self::from([
+            ...$request->all(),
+            'participants' => $participants,
+        ]);
+    }
 
     public static function rules(ValidationContext $context): array
     {

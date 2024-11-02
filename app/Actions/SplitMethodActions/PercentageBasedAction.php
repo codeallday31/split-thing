@@ -10,14 +10,12 @@ class PercentageBasedAction
 {
     public function __invoke(Expense $expense, ExpenseData $data)
     {
-        $expenseDistribution = $data->participants
-            ->filter(fn ($participant) => $participant->is_selected)
-            ->map(fn ($participant) => [
+        $expense->splits()->createMany(
+            $data->participants->map(fn ($participant) => [
                 'user_id' => $participant->id,
                 'amount' => $this->calculate($expense->amount, $participant),
-            ]);
-
-        $expense->splits()->createMany($expenseDistribution);
+            ]),
+        );
     }
 
     private function calculate(float $amount, ExpenseParticipantData $participant): float
