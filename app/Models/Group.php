@@ -28,6 +28,8 @@ class Group extends Model
         'user_id',
     ];
 
+    protected $with = ['members:id,name'];
+
     protected $dataClass = GroupData::class;
 
     public function members(): BelongsToMany
