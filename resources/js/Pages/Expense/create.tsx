@@ -1,3 +1,11 @@
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -10,7 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Group } from '@/types';
+import { Expense, Group } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { FormEvent } from 'react';
 
@@ -24,7 +32,7 @@ interface IGroup extends Group {
 }
 
 interface SplitOption {
-    name: string;
+    label: string;
     value: string;
 }
 
@@ -37,6 +45,7 @@ interface Props {
     model: {
         group: IGroup;
         split_options: SplitOption[];
+        expense?: Expense;
     };
 }
 
@@ -102,203 +111,177 @@ const Create = ({ model }: Props) => {
 
     return (
         <>
-            <form className="grid gap-6" onSubmit={handleSubmit}>
-                <Label htmlFor="description">description</Label>
-                <Input
-                    id="description"
-                    name="description"
-                    value={data.description}
-                    onChange={(e) => setData('description', e.target.value)}
-                />
-                <Label htmlFor="amount">Amount</Label>
-                <Input
-                    type="number"
-                    id="amount"
-                    name="amount"
-                    min={0}
-                    step={0.01}
-                    value={data.amount}
-                    onChange={(e) => setData('amount', e.target.value)}
-                />
-                <Label htmlFor="expense-date">Date of Expense</Label>
-                <Input
-                    id="expense-date"
-                    name="expense-date"
-                    type="date"
-                    value={data.expenseDate}
-                    onChange={(e) => setData('expenseDate', e.target.value)}
-                />
-                <Label>Paid by</Label>
-                <Select
-                    value={data.payerId}
-                    onValueChange={(value) => setData('payerId', value)}
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select who paid for" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {groupMembers.map((member) => (
-                            <SelectItem
-                                value={member.id.toString()}
-                                key={member.id}
+            <form className="mx0a grid gap-6" onSubmit={handleSubmit}>
+                <Card className="max-w-2xl">
+                    <CardHeader>
+                        <CardTitle>
+                            <span className="text-lg">Expense Details</span>
+                        </CardTitle>
+                        <CardDescription>
+                            Enter the details of the expense, including the
+                            amount, date, and the person who paid for it
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-4">
+                        <div className="grid gap-3">
+                            <Label htmlFor="description">description</Label>
+                            <Input
+                                id="description"
+                                name="description"
+                                value={data.description}
+                                onChange={(e) =>
+                                    setData('description', e.target.value)
+                                }
+                            />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="amount">Amount</Label>
+                            <Input
+                                type="number"
+                                id="amount"
+                                name="amount"
+                                min={0}
+                                step={0.01}
+                                value={data.amount}
+                                onChange={(e) =>
+                                    setData('amount', e.target.value)
+                                }
+                            />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="expense-date">
+                                Date of Expense
+                            </Label>
+                            <Input
+                                id="expense-date"
+                                name="expense-date"
+                                type="date"
+                                value={data.expenseDate}
+                                onChange={(e) =>
+                                    setData('expenseDate', e.target.value)
+                                }
+                            />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label>Paid by</Label>
+                            <Select
+                                value={data.payerId}
+                                onValueChange={(value) =>
+                                    setData('payerId', value)
+                                }
                             >
-                                {member.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-                <Label>Split between</Label>
-                <div className="divide-y divide-gray-800 border-b border-t border-gray-800">
-                    {data.participants.map((p) => (
-                        <div
-                            key={p.id}
-                            className="items-star-2 relative flex py-4"
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select who paid for" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {groupMembers.map((member) => (
+                                        <SelectItem
+                                            value={member.id.toString()}
+                                            key={member.id}
+                                        >
+                                            {member.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="max-w-2xl">
+                    <CardHeader>
+                        <CardTitle>
+                            <span className="text-lg">Participants</span>
+                        </CardTitle>
+                        <CardDescription>
+                            Select who are involved in this expense and choose
+                            how to divide the cost.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="divide-y divide-gray-800 border-b border-t border-gray-800">
+                            {data.participants.map((p) => (
+                                <div
+                                    key={p.id}
+                                    className="items-star-2 relative flex py-4"
+                                >
+                                    <div className="min-w-0 flex-1 text-sm leading-6">
+                                        <div className="flex items-center space-x-2">
+                                            <Checkbox
+                                                id={`participant-${p.id}`}
+                                                checked={p.isSelected}
+                                                onCheckedChange={(isChecked) =>
+                                                    handleSelectParticipantChange(
+                                                        !!isChecked,
+                                                        p.id,
+                                                    )
+                                                }
+                                            />
+                                            <Label
+                                                htmlFor={`participant-${p.id}`}
+                                                className="select-none font-medium"
+                                            >
+                                                {p.name}
+                                            </Label>
+                                        </div>
+                                    </div>
+
+                                    <div className="ml-3 flex h-6 items-center">
+                                        {data.splitMethod !== 'equally' && (
+                                            <Input
+                                                type="number"
+                                                id={`participant-${p.id}`}
+                                                name="amount"
+                                                min={0}
+                                                step={0.01}
+                                                disabled={!p.isSelected}
+                                                value={p.value}
+                                                onChange={(e) =>
+                                                    handleSplitValueChange(
+                                                        p.id,
+                                                        e.target.value,
+                                                    )
+                                                }
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                        <Label className="mr-2 text-sm italic">
+                            Splitting options:
+                        </Label>
+                        <RadioGroup
+                            value={data.splitMethod}
+                            onValueChange={(value) =>
+                                setData('splitMethod', value)
+                            }
+                            className="flex items-center space-x-3"
                         >
-                            <div className="min-w-0 flex-1 text-sm leading-6">
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id={`participant-${p.id}`}
-                                        checked={p.isSelected}
-                                        onCheckedChange={(isChecked) =>
-                                            handleSelectParticipantChange(
-                                                !!isChecked,
-                                                p.id,
-                                            )
-                                        }
+                            {model.split_options.map((option) => (
+                                <div
+                                    className="flex items-center space-x-2"
+                                    key={option.value}
+                                >
+                                    <RadioGroupItem
+                                        value={option.value}
+                                        id={`split-opt-${option.value}`}
                                     />
                                     <Label
-                                        htmlFor={`participant-${p.id}`}
-                                        className="select-none font-medium"
+                                        htmlFor={`split-opt-${option.value}`}
                                     >
-                                        {p.name}
+                                        {option.label}
                                     </Label>
                                 </div>
-                            </div>
+                            ))}
+                        </RadioGroup>
+                    </CardFooter>
+                </Card>
 
-                            <div className="ml-3 flex h-6 items-center">
-                                {data.splitMethod !== 'equally' && (
-                                    <Input
-                                        type="number"
-                                        id={`participant-${p.id}`}
-                                        name="amount"
-                                        min={0}
-                                        step={0.01}
-                                        disabled={!p.isSelected}
-                                        value={p.value}
-                                        onChange={(e) =>
-                                            handleSplitValueChange(
-                                                p.id,
-                                                e.target.value,
-                                            )
-                                        }
-                                    />
-                                )}
-                                {/* {data.splitMethod === 'equally' ? (
-                                    <Checkbox
-                                        checked={data.participants.includes(
-                                            member.id,
-                                        )}
-                                        id={`participant-${member.id}`}
-                                        onCheckedChange={(isChecked) => {
-                                            const value = isChecked
-                                                ? [
-                                                      ...data.participants,
-                                                      member.id,
-                                                  ]
-                                                : data.participants.filter(
-                                                      (participant) =>
-                                                          participant !==
-                                                          member.id,
-                                                  );
-
-                                            setData('participants', value);
-                                        }}
-                                    />
-                                ) : (
-                                    <Input
-                                        type="number"
-                                        id={`participant-${member.id}`}
-                                        name="amount"
-                                        min={0}
-                                        step={0.01}
-                                    />
-                                )} */}
-                            </div>
-                        </div>
-                    ))}
+                <div>
+                    <Button type="submit">Save</Button>
                 </div>
-                {/* <div className="divide-y divide-gray-800 border-b border-t border-gray-800">
-                    {groupMembers.map((member) => (
-                        <div
-                            key={member.id}
-                            className="items-star-2 relative flex py-4"
-                        >
-                            <div className="min-w-0 flex-1 text-sm leading-6">
-                                <Label
-                                    htmlFor={`participant-${member.id}`}
-                                    className="select-none font-medium"
-                                >
-                                    {member.name}
-                                </Label>
-                            </div>
-                            <div className="ml-3 flex h-6 items-center">
-                                {data.splitMethod === 'equally' ? (
-                                    <Checkbox
-                                        checked={data.participants.includes(
-                                            member.id,
-                                        )}
-                                        id={`participant-${member.id}`}
-                                        onCheckedChange={(isChecked) => {
-                                            const value = isChecked
-                                                ? [
-                                                      ...data.participants,
-                                                      member.id,
-                                                  ]
-                                                : data.participants.filter(
-                                                      (participant) =>
-                                                          participant !==
-                                                          member.id,
-                                                  );
-
-                                            setData('participants', value);
-                                        }}
-                                    />
-                                ) : (
-                                    <Input
-                                        type="number"
-                                        id={`participant-${member.id}`}
-                                        name="amount"
-                                        min={0}
-                                        step={0.01}
-                                    />
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div> */}
-                <Label className="text-sm italic">Splitting options..</Label>
-                <RadioGroup
-                    value={data.splitMethod}
-                    onValueChange={(value) => setData('splitMethod', value)}
-                    className="flex items-center space-x-3"
-                >
-                    {model.split_options.map((option) => (
-                        <div
-                            className="flex items-center space-x-2"
-                            key={option.value}
-                        >
-                            <RadioGroupItem
-                                value={option.value}
-                                id={`split-opt-${option.value}`}
-                            />
-                            <Label htmlFor={`split-opt-${option.value}`}>
-                                {option.name}
-                            </Label>
-                        </div>
-                    ))}
-                </RadioGroup>
-
-                <Button type="submit">Create</Button>
             </form>
         </>
     );

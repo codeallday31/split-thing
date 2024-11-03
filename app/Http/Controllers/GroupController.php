@@ -6,6 +6,7 @@ use App\Actions\UpsertGroupAction;
 use App\Data\GroupData;
 use App\Models\Group;
 use App\ViewModels\GetGroupShowViewModel;
+use App\ViewModels\GetGroupsViewModel;
 use App\ViewModels\UpsertGroupViewModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,17 +19,8 @@ class GroupController
     public function index(): Response
     {
         return Inertia::render('Group/index', [
-            'all_groups' => fn () => Group::query()->where(function ($query) {
-                return $query->whereUserId(auth()->user()->id)
-                    ->orWhereHas('members', function ($q) {
-                        return $q->where('user_id', auth()->user()->id);
-                    });
-            })->get()->map->getdata(),
-            'created_groups' => Inertia::lazy(fn () => Group::query()->whereUserId(auth()->user()->id)->get()->map->getData()),
-            'joined_groups' => Inertia::lazy(fn () => Group::whereHas('members', function ($query) {
-                $query->where('user_id', auth()->user()->id);
-            })->get()->map->getData()),
-            'has_groups' => true,
+            'model' => new GetGroupsViewModel,
+
         ]);
     }
 

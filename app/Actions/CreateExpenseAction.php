@@ -11,7 +11,7 @@ class CreateExpenseAction
     {
         $expense = Expense::updateOrCreate(
             [
-                'id' => $data->expense_id,
+                'id' => $data->id,
             ],
             [
                 'group_id' => $data->group_id,

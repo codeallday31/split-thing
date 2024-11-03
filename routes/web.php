@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('groups')->name('expenses.')->group(function () {
         Route::get('{group}/expenses/create', [ExpenseController::class, 'create'])->name('create');
         Route::post('{group}/expenses', [ExpenseController::class, 'store'])->name('store');
+        Route::get('{group}/expenses/{expense}/edit', [ExpenseController::class, 'edit'])->name('edit');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

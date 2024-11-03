@@ -3,7 +3,9 @@
 namespace App\Data;
 
 use App\Models\Group;
+use App\Policies\GroupPolicy;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Spatie\LaravelData\Attributes\WithoutValidation;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Lazy;
@@ -16,6 +18,7 @@ class GroupData extends Data
      */
     public function __construct(
         public readonly ?int $id,
+        public readonly ?int $creator_id,
         public readonly string $name,
         public readonly ?string $description,
         public readonly array $memberIds,
@@ -23,6 +26,7 @@ class GroupData extends Data
         public readonly string|Optional $created_at,
         #[WithoutValidation]
         public readonly ?Lazy $members,
+        public readonly ?array $can
     ) {}
 
     public static function fromModel(Group $group): self
@@ -36,6 +40,9 @@ class GroupData extends Data
                 $group,
                 fn () => UserData::collect($group->members)
             ),
+            'can' => [
+                'modify' => Auth::user()->can(GroupPolicy::MODIFY, $group),
+            ],
         ]);
     }
 }

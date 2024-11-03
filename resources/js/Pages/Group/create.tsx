@@ -64,7 +64,7 @@ export default function Create({ model }: Props) {
             <Head title="Group" />
             <div>
                 <form className="grid gap-6" onSubmit={handleSubmit}>
-                    <Card>
+                    <Card className="max-w-xl">
                         <CardHeader>
                             <CardTitle>
                                 <span className="text-lg">Group details</span>

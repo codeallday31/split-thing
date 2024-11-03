@@ -2,17 +2,21 @@
 
 namespace App\Models\Group;
 
+use App\Data\ExpenseData;
 use App\Enums\ExpenseSplitMethod;
 use App\Models\ExpenseSplit;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\LaravelData\WithData;
 
 class Expense extends Model
 {
     use HasFactory;
+    use WithData;
 
     protected $fillable = [
         'group_id',
@@ -22,6 +26,8 @@ class Expense extends Model
         'payer_id',
         'split_method',
     ];
+
+    protected $dataClass = ExpenseData::class;
 
     /**
      * @return array<string, string>
@@ -41,5 +47,10 @@ class Expense extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
+    }
+
+    public function payer(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

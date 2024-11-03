@@ -10,34 +10,32 @@ use Illuminate\Support\Facades\Auth;
 
 final class GetGroupsViewModel extends ViewModel
 {
-    /**
-     * @return Collection<GroupData>
-     */
-    public function created_groups(): Collection
-    {
-        return Group::query()->whereUserId(auth()->user()->id)->get()->map->getData();
-    }
+    // /**
+    //  * @return Collection<GroupData>
+    //  */
+    // public function groups(): Collection
+    // {
+    //     return Group::query()->whereUserId(auth()->user()->id)->get()->map->getData();
+    // }
 
-    /**
-     * @return \Inertia\LazyProp
-     */
-    public function joinedGroups()
-    {
-        $groups = Group::whereHas('members', function ($query) {
-            $query->where('user_id', auth()->user()->id);
-        })->get()->map->getData();
+    // public function joinedGroups()
+    // {
+    //     $groups = Group::whereHas('members', function ($query) {
+    //         $query->where('user_id', auth()->user()->id);
+    //     })->get()->map->getData();
 
-        return $groups;
-    }
+    //     return $groups;
+    // }
 
-    public function allGroups()
+    public function groups()
     {
         return Group::query()->where(function ($query) {
             return $query->whereUserId(auth()->user()->id)
                 ->orWhereHas('members', function ($q) {
                     return $q->where('user_id', auth()->user()->id);
                 });
-        })->get()->map->getdata();
+        })
+            ->get()->map->getdata();
     }
 
     // public function test()
