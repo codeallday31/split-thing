@@ -18,7 +18,7 @@ class UpsertGroupAction
                 'user_id' => $user->id,
             ]);
 
-        $group->members()->sync($data->memberIds);
+        $group->members()->sync($data->members->pluck('id'));
 
     }
 }

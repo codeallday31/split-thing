@@ -11,9 +11,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Textarea } from '@/components/ui/textarea';
-import { Group } from '@/types';
+import { GroupRulePolicy } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
+
+interface Member {
+    id: number;
+    name: string;
+}
+
+interface Group {
+    id: number;
+    name: string;
+    description: string;
+    can: GroupRulePolicy;
+    members: Member[];
+}
 
 interface GroupCreateState {
     id: number | null;
@@ -27,14 +40,10 @@ interface IUser {
     label: string;
 }
 
-interface IMember extends Group {
-    memberIds: string[];
-}
-
 interface Props {
     model: {
         users: IUser[];
-        group: IMember;
+        group: Group;
     };
 }
 
@@ -43,7 +52,8 @@ export default function Create({ model }: Props) {
         id: model.group?.id,
         name: model.group?.name ?? '',
         description: model.group?.description ?? '',
-        memberIds: model.group?.memberIds ?? [],
+        memberIds:
+            model.group?.members.map((member) => member.id.toString()) ?? [],
     });
 
     const handleSubmit = (e: FormEvent) => {

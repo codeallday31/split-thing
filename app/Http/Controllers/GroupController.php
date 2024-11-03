@@ -20,7 +20,6 @@ class GroupController
     {
         return Inertia::render('Group/index', [
             'model' => new GetGroupsViewModel,
-
         ]);
     }
 

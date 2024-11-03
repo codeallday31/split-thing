@@ -18,7 +18,7 @@ export type PageProps<
 //     name: string;
 // }
 
-interface GroupRulePolicy {
+export interface GroupRulePolicy {
     modify: boolean;
 }
 
