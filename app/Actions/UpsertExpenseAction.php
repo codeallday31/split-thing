@@ -5,7 +5,7 @@ namespace App\Actions;
 use App\Data\ExpenseData;
 use App\Models\Group\Expense;
 
-class CreateExpenseAction
+class UpsertExpenseAction
 {
     public static function execute(ExpenseData $data): Expense
     {
@@ -28,6 +28,6 @@ class CreateExpenseAction
         $splitMethod = $data->split_method->createExpenseSplit();
         $splitMethod($expense, $data);
 
-        return $expense->load('group');
+        return $expense;
     }
 }

@@ -36,7 +36,8 @@ interface Props {
     model: {
         group: Pick<Group, 'members' | 'id'>;
         split_options: SplitOption[];
-        expense?: Expense;
+        expense: Expense | null;
+        participants: { [key: string]: string } | null;
     };
 }
 
@@ -47,7 +48,8 @@ const Create = ({ model }: Props) => {
         ...model.group.members,
     ];
 
-    const { data, setData, post, transform } = useForm<{
+    const { data, setData, post, transform, put } = useForm<{
+        id: number | null;
         description: string;
         amount: string | number;
         expenseDate: string;
@@ -55,6 +57,7 @@ const Create = ({ model }: Props) => {
         splitMethod: string;
         participants: ExpenseParticipant[];
     }>({
+        id: model.expense?.id ?? null,
         description: model.expense?.description ?? '',
         amount: model.expense?.amount ?? 0,
         expenseDate: '2024-10-23',
@@ -62,8 +65,12 @@ const Create = ({ model }: Props) => {
         splitMethod: model.expense?.split_method ?? 'equally',
         participants: groupMembers.map((member) => ({
             ...member,
-            isSelected: true,
-            value: 0,
+            isSelected: model.participants
+                ? !!model.participants[member.id]
+                : true,
+            value: model.participants
+                ? (model.participants[member.id] ?? 0)
+                : 0,
         })),
     });
 
@@ -74,7 +81,16 @@ const Create = ({ model }: Props) => {
             groupId: model.group.id,
         }));
 
-        post(route('expenses.store', model.group.id));
+        if (model.expense) {
+            put(
+                route('expenses.update', {
+                    group: model.group.id,
+                    expense: model.expense.id,
+                }),
+            );
+        } else {
+            post(route('expenses.store', model.group.id));
+        }
     };
 
     const handleSelectParticipantChange = (

@@ -23,7 +23,7 @@ interface IUser {
 interface Props {
     model: {
         users: IUser[];
-        group: GroupCreate;
+        group: GroupCreate | null;
     };
 }
 
@@ -34,7 +34,7 @@ export default function Create({ model }: Props) {
         description: string;
         memberIds: string[];
     }>({
-        id: model.group?.id,
+        id: model.group?.id ?? null,
         name: model.group?.name ?? '',
         description: model.group?.description ?? '',
         memberIds:

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateExpenseAction;
+use App\Actions\UpsertExpenseAction;
 use App\Data\ExpenseData;
 use App\Models\Group;
 use App\Models\Group\Expense;
@@ -24,11 +24,11 @@ class ExpenseController
         ]);
     }
 
-    public function store(ExpenseData $data): RedirectResponse
+    public function store(ExpenseData $data, Group $group): RedirectResponse
     {
-        $expense = CreateExpenseAction::execute($data);
+        UpsertExpenseAction::execute($data);
 
-        return to_route('groups.show', $expense->group->id);
+        return to_route('groups.show', $group->id);
     }
 
     public function edit(Group $group, Expense $expense)
@@ -36,5 +36,12 @@ class ExpenseController
         return Inertia::render('Expense/create', [
             'model' => new UpsertExpenseViewModel($group, $expense),
         ]);
+    }
+
+    public function update(ExpenseData $data, Group $group): RedirectResponse
+    {
+        UpsertExpenseAction::execute($data);
+
+        return to_route('groups.show', $group->id);
     }
 }

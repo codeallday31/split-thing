@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
         Route::get('{group}/expenses/create', [ExpenseController::class, 'create'])->name('create');
         Route::post('{group}/expenses', [ExpenseController::class, 'store'])->name('store');
         Route::get('{group}/expenses/{expense}/edit', [ExpenseController::class, 'edit'])->name('edit');
+        Route::put('{group}/expenses/{expense}', [ExpenseController::class, 'update'])->name('update');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

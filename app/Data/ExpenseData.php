@@ -34,10 +34,10 @@ class ExpenseData extends Data
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]
         public readonly Carbon $expense_date,
         #[MapInputName('payerId')]
-        public readonly ExpenseSplitMethod $split_method,
-        public readonly string|PayerData|Lazy $payer,
+        public readonly string|PayerData $payer,
         #[WithCast(EnumCast::class)]
         public readonly null|Collection|Lazy $participants,
+        public readonly ExpenseSplitMethod $split_method,
     ) {}
 
     public static function fromRequest(Request $request): self
@@ -56,11 +56,6 @@ class ExpenseData extends Data
         return self::from([
             ...$expense->toArray(),
             'expense_date' => $expense->expense_date->format('Y-m-d'),
-            'payer' => Lazy::whenLoaded(
-                'payer',
-                $expense,
-                fn () => PayerData::from(User::whereId($expense->payer_id)->first()),
-            ),
             'participants' => Lazy::whenLoaded(
                 'splits',
                 $expense,

@@ -41,13 +41,14 @@ class GroupData extends Data
 
     public static function fromModel(Group $group): self
     {
+
         return self::from([
             ...$group->toArray(),
             'created_at' => $group->created_at->format('Y-m-d H:i:s'),
             'members' => Lazy::whenLoaded(
                 'members',
                 $group,
-                fn () => UserData::collect($group->members)
+                fn () => UserData::collect($group->members->where('id', '!=', auth()->user()->id))
             ),
             'can' => [
                 'modify' => Auth::user()->can(GroupPolicy::MODIFY, $group),

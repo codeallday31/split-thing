@@ -5,6 +5,7 @@ namespace App\ViewModels;
 use App\Data\ExpenseData;
 use App\Data\GroupData;
 use App\Enums\ExpenseSplitMethod;
+use App\Models\ExpenseSplit;
 use App\Models\Group;
 use App\Models\Group\Expense;
 use Illuminate\Support\Collection;
@@ -39,6 +40,20 @@ class UpsertExpenseViewModel extends ViewModel
             return null;
         }
 
-        return $this->expense->load('payer', 'splits')->getData();
+        return $this->expense->load('payer')->getData();
+    }
+
+    public function participants(): ?Collection
+    {
+        if (! $this->expense) {
+            return null;
+        }
+
+        return ExpenseSplit::query()
+            ->where('expense_id', $this->expense->id)
+            ->get()
+            ->mapWithKeys(fn (ExpenseSplit $split) => [
+                $split->user_id => $split->amount,
+            ]);
     }
 }

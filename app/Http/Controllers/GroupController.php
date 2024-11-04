@@ -45,8 +45,6 @@ class GroupController
     }
 
     /**
-     * Update the given blog post.
-     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Group $group)

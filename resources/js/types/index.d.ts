@@ -53,5 +53,5 @@ export interface Expense {
     expense_date: string;
     split_method: string;
     payer: Payer;
-    participants: SplitParticipant[];
+    // participants: SplitParticipant[];
 }
