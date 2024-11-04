@@ -13,10 +13,13 @@ export type PageProps<
     };
 };
 
-// interface GroupOwner {
-//     id: number;
-//     name: string;
-// }
+interface Member {
+    id: number;
+    name: string;
+}
+
+export type GroupRecord = Omit<Group, 'members'>;
+export type GroupCreate = Omit<Group, 'created_at' | 'can'>;
 
 export interface GroupRulePolicy {
     modify: boolean;
@@ -25,11 +28,10 @@ export interface GroupRulePolicy {
 export interface Group {
     id: number;
     name: string;
-    created_at: string;
     description: string;
-    user_id: ?number;
+    members: Member[];
+    created_at: string;
     can: GroupRulePolicy;
-    // owner: GroupOwner;
 }
 
 export interface Expense {

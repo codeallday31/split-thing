@@ -11,29 +11,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Textarea } from '@/components/ui/textarea';
-import { GroupRulePolicy } from '@/types';
+import { GroupCreate } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
-
-interface Member {
-    id: number;
-    name: string;
-}
-
-interface Group {
-    id: number;
-    name: string;
-    description: string;
-    can: GroupRulePolicy;
-    members: Member[];
-}
-
-interface GroupCreateState {
-    id: number | null;
-    name: string;
-    description: string;
-    memberIds: string[];
-}
 
 interface IUser {
     value: string;
@@ -43,12 +23,17 @@ interface IUser {
 interface Props {
     model: {
         users: IUser[];
-        group: Group;
+        group: GroupCreate;
     };
 }
 
 export default function Create({ model }: Props) {
-    const { data, setData, post, errors, put } = useForm<GroupCreateState>({
+    const { data, setData, post, errors, put } = useForm<{
+        id: number | null;
+        name: string;
+        description: string;
+        memberIds: string[];
+    }>({
         id: model.group?.id,
         name: model.group?.name ?? '',
         description: model.group?.description ?? '',

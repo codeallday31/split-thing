@@ -4,9 +4,6 @@ namespace App\ViewModels;
 
 use App\Data\GroupData;
 use App\Models\Group;
-use App\Models\User;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 
 final class GetGroupsViewModel extends ViewModel
 {
@@ -35,21 +32,9 @@ final class GetGroupsViewModel extends ViewModel
                     return $q->where('user_id', auth()->user()->id);
                 });
         })
-            ->get()->map->getdata();
+            ->get()->map(fn (Group $group) => GroupData::from($group)->except('members'));
     }
 
-    // public function test()
-    // {
-    //     return User::with([
-    //         'created_groups:id,user_id,name,description,created_at',
-    //         'groups:id,user_id,name,description,created_at',
-    //     ])->where('users.id', auth()->user()->id)->get()->map->getData();
-    //     // return User::query()->whereId(auth()->user()->id)
-    //     // ->with(['groups', 'created_groups'])
-    //     // ->get()
-    //     // ->map
-    //     // ->getData();
-    // }
     public function hasGroups(): bool
     {
         return auth()->user()->created_groups()->count() >= 1;

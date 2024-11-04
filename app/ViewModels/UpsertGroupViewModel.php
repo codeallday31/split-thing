@@ -27,6 +27,6 @@ class UpsertGroupViewModel extends ViewModel
             return null;
         }
 
-        return $this->group->load('members')->getData();
+        return GroupData::from($this->group)->except('created_at', 'can');
     }
 }

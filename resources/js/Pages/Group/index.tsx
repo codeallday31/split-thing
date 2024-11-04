@@ -1,11 +1,11 @@
 import GroupList from '@/components/group-list';
 import { Button } from '@/components/ui/button';
-import { Group } from '@/types';
+import { GroupRecord } from '@/types';
 import { Link } from '@inertiajs/react';
 
 interface Props {
     model: {
-        groups: Group[];
+        groups: GroupRecord[];
         count_of_group_members: { [key: number]: number };
         has_groups: boolean;
     };

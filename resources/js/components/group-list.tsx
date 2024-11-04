@@ -6,12 +6,12 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { stringLimit } from '@/lib/utils';
-import { Group } from '@/types';
+import { GroupRecord } from '@/types';
 import { Link } from '@inertiajs/react';
 import { MoreHorizontal } from 'lucide-react';
 
 interface Props {
-    groups: Group[];
+    groups: GroupRecord[];
 }
 
 const GroupList = ({ groups }: Props) => {
