@@ -18,6 +18,17 @@ interface Member {
     name: string;
 }
 
+interface Payer {
+    id: number;
+    name: string;
+}
+
+interface SplitParticipant {
+    id: number;
+    expense: number;
+    amount: number;
+}
+
 export type GroupRecord = Omit<Group, 'members'>;
 export type GroupCreate = Omit<Group, 'created_at' | 'can'>;
 
@@ -40,7 +51,7 @@ export interface Expense {
     description: string;
     amount: number;
     expense_date: string;
-    payer_id: number;
     split_method: string;
-    payer: string;
+    payer: Payer;
+    participants: SplitParticipant[];
 }

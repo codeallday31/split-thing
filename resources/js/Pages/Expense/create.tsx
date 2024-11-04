@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -5,8 +6,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from '@/components/ui';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,18 +18,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Expense, Group } from '@/types';
+import { Expense, Group, Member } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { FormEvent } from 'react';
-
-interface Member {
-    id: number;
-    name: string;
-}
-
-interface IGroup extends Group {
-    members: Member[];
-}
 
 interface SplitOption {
     label: string;
@@ -43,7 +34,7 @@ interface ExpenseParticipant extends Member {
 
 interface Props {
     model: {
-        group: IGroup;
+        group: Pick<Group, 'members' | 'id'>;
         split_options: SplitOption[];
         expense?: Expense;
     };
@@ -64,11 +55,11 @@ const Create = ({ model }: Props) => {
         splitMethod: string;
         participants: ExpenseParticipant[];
     }>({
-        description: '',
-        amount: 0,
+        description: model.expense?.description ?? '',
+        amount: model.expense?.amount ?? 0,
         expenseDate: '2024-10-23',
-        payerId: '',
-        splitMethod: 'equally',
+        payerId: model.expense?.payer.id.toString() ?? '',
+        splitMethod: model.expense?.split_method ?? 'equally',
         participants: groupMembers.map((member) => ({
             ...member,
             isSelected: true,

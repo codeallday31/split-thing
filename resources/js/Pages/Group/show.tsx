@@ -71,7 +71,7 @@ const Show = ({ model }: Props) => {
                                         {expense.expense_date}
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">
-                                        {expense.payer}
+                                        {expense.payer.name}
                                     </TableCell>
                                     <TableCell className="flex items-center">
                                         <Button variant="link" asChild>

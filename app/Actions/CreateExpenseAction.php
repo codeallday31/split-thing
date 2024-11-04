@@ -18,7 +18,7 @@ class CreateExpenseAction
                 'description' => $data->description,
                 'amount' => $data->amount,
                 'expense_date' => $data->expense_date,
-                'payer_id' => $data->payer_id,
+                'payer_id' => $data->payer->id,
                 'split_method' => $data->split_method,
             ]
         );

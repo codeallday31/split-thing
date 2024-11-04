@@ -3,6 +3,7 @@
 namespace App\ViewModels;
 
 use App\Data\ExpenseData;
+use App\Data\GroupData;
 use App\Enums\ExpenseSplitMethod;
 use App\Models\Group;
 use App\Models\Group\Expense;
@@ -17,7 +18,7 @@ class UpsertExpenseViewModel extends ViewModel
 
     public function group()
     {
-        return $this->group->getData();
+        return GroupData::from($this->group)->except('created_at', 'can', 'description', 'name');
     }
 
     /**
@@ -38,6 +39,6 @@ class UpsertExpenseViewModel extends ViewModel
             return null;
         }
 
-        return $this->expense->load('payer')->getData();
+        return $this->expense->load('payer', 'splits')->getData();
     }
 }

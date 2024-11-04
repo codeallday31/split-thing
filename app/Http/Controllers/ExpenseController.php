@@ -28,7 +28,7 @@ class ExpenseController
     {
         $expense = CreateExpenseAction::execute($data);
 
-        return to_route('expenses.index', $expense->group->id);
+        return to_route('groups.show', $expense->group->id);
     }
 
     public function edit(Group $group, Expense $expense)

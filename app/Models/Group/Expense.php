@@ -36,6 +36,7 @@ class Expense extends Model
     {
         return [
             'split_method' => ExpenseSplitMethod::class,
+            'expense_date' => 'datetime',
         ];
     }
 
