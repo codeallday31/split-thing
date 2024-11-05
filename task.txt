@@ -1,3 +1,0 @@
-Expense Table
-- create new column for split method value,
-- usage: to be able to display the value in expense update page, especially when the selected method are percentages and share.

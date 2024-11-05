@@ -3,7 +3,6 @@
 namespace App\Data;
 
 use App\Enums\ExpenseSplitMethod;
-use App\Models\ExpenseSplit;
 use App\Models\Group\Expense;
 use App\Models\User;
 use App\Rules\SplitMethodRule;
@@ -53,13 +52,14 @@ class ExpenseData extends Data
 
     public static function fromModel(Expense $expense): self
     {
+        // dd($expense->splits);
         return self::from([
             ...$expense->toArray(),
             'expense_date' => $expense->expense_date->format('Y-m-d'),
             'participants' => Lazy::whenLoaded(
                 'splits',
                 $expense,
-                fn () => SplitData::collect(ExpenseSplit::where('expense_id', $expense->id)->get())
+                fn () => SplitData::collect($expense->splits)
             ),
         ]);
     }

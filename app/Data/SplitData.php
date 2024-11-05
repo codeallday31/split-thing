@@ -10,5 +10,6 @@ class SplitData extends Data
         public readonly int $id,
         public readonly int $expense_id,
         public readonly float $amount,
+        public readonly int $user_id,
     ) {}
 }

@@ -44,4 +44,9 @@ class ExpenseController
 
         return to_route('groups.show', $group->id);
     }
+
+    public function show(Group $group, Expense $expense)
+    {
+        return Inertia::render('Expense/show');
+    }
 }

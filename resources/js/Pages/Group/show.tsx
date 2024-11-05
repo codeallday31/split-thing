@@ -14,17 +14,20 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 import { Expense, Group } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 
 interface Props {
     model: {
         group: Group;
         expenses: Expense[];
+        amounts: { [key: number]: string };
     };
 }
 
 const Show = ({ model }: Props) => {
+    const { auth } = usePage().props;
     return (
         <>
             <div>
@@ -53,8 +56,10 @@ const Show = ({ model }: Props) => {
                             <TableRow>
                                 <TableHead>Description</TableHead>
                                 <TableHead>Amount</TableHead>
-                                <TableHead>Expense Date</TableHead>
+                                <TableHead>Share Method</TableHead>
                                 <TableHead>Paid By</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Date of Expense</TableHead>
                                 <TableHead className="w-[72px]"></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -62,16 +67,48 @@ const Show = ({ model }: Props) => {
                             {model.expenses.map((expense) => (
                                 <TableRow key={expense.id}>
                                     <TableCell className="font-medium">
-                                        {expense.description}
+                                        <Button variant="link" asChild>
+                                            <Link
+                                                href={route('expenses.show', {
+                                                    group: model.group.id,
+                                                    expense: expense.id,
+                                                })}
+                                            >
+                                                {expense.description}
+                                            </Link>
+                                        </Button>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">
                                         {expense.amount}
                                     </TableCell>
-                                    <TableCell className="text-muted-foreground">
-                                        {expense.expense_date}
+                                    <TableCell className="capitalize text-muted-foreground">
+                                        {expense.split_method}
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">
                                         {expense.payer.name}
+                                    </TableCell>
+                                    <TableCell
+                                        className={cn(
+                                            'text-muted-foreground',
+                                            !!model.amounts[expense.id]
+                                                ? expense.payer.id ===
+                                                  auth.user.id
+                                                    ? 'text-green-500'
+                                                    : 'text-red-500'
+                                                : 'text-gray-700',
+                                        )}
+                                    >
+                                        {!!model.amounts[expense.id]
+                                            ? `You ${
+                                                  expense.payer.id ===
+                                                  auth.user.id
+                                                      ? 'lent'
+                                                      : 'borrowed'
+                                              } (${model.amounts[expense.id]})`
+                                            : 'Not Involved'}
+                                    </TableCell>
+                                    <TableCell className="text-muted-foreground">
+                                        {expense.expense_date}
                                     </TableCell>
                                     <TableCell className="flex items-center">
                                         <Button variant="link" asChild>

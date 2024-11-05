@@ -17,6 +17,7 @@
     },
     "rules": {
         "no-console": ["error", { "allow": ["warn", "error"] }],
+        "no-extra-boolean-cast": "off",
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off",
         "react/no-unescaped-entities": "off"

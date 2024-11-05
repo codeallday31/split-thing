@@ -27,6 +27,7 @@ interface SplitParticipant {
     id: number;
     expense: number;
     amount: number;
+    user_id: number;
 }
 
 export type GroupRecord = Omit<Group, 'members'>;
@@ -53,5 +54,5 @@ export interface Expense {
     expense_date: string;
     split_method: string;
     payer: Payer;
-    // participants: SplitParticipant[];
+    participants: SplitParticipant[];
 }
