@@ -19,19 +19,44 @@ class GetGroupShowViewModel extends ViewModel
 
     public function expenses()
     {
-        return Expense::query()->where('group_id', $this->group->id)->with('payer')->orderBy('expense_date', 'desc')->get()->map->getData();
+        return Expense::query()
+            ->where('group_id', $this->group->id)
+            ->with(['payer'])
+            ->orderBy('expense_date', 'desc')
+            ->get()
+            ->map->getData();
     }
+
+    // public function amounts()
+    // {
+    //     return ExpenseSplit::query()
+    //         ->where('user_id', '=', auth()->user()->id)
+    //         ->get()
+    //         ->mapWithKeys(function ($item) {
+    //             return [$item->expense_id => $item->amount];
+    //         });
+    // }
 
     public function amounts()
     {
-        return ExpenseSplit::query()->where('user_id', '=', auth()->user()->id)->get()
+        return ExpenseSplit::selectRaw('
+            expenses.id,
+            CASE
+            WHEN expenses.payer_id = ? THEN (
+                SELECT SUM(amount)
+                FROM expense_splits as inner_splits
+                WHERE inner_splits.expense_id = expense_splits.expense_id
+                AND inner_splits.user_id != ?
+            )
+            ELSE expense_splits.amount
+        END as amount
+    ', [auth()->id(), auth()->id()])
+            ->join('expenses', 'expense_splits.expense_id', '=', 'expenses.id')
+            ->where('expense_splits.user_id', auth()->id())
+            ->get()
             ->mapWithKeys(function ($item) {
-                return [$item->expense_id => $item->amount];
+                return [$item->id => $item->amount];
             });
-    }
 
-    public function amountssss()
-    {
-        return ExpenseSplit::query()->where('user_id', '=', auth()->user()->id)->sum('amount');
     }
 }

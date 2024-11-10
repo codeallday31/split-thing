@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(Group::class)->constrained()->cascadeOnDelete();
             $table->string('description');
             $table->decimal('amount', 15, 2);
-            $table->dateTime('expense_date');
+            $table->datetime('expense_date');
             // $table->string('status')->default(ExpenseStatus::Pending->value);
             $table->foreignIdFor(User::class, 'payer_id')->constrained('users')->nullOnDelete();
             $table->string('split_method');

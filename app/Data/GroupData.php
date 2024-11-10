@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Spatie\LaravelData\Attributes\MapInputName;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
+use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Lazy;
+use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
 class GroupData extends Data
 {
@@ -24,7 +24,7 @@ class GroupData extends Data
         public readonly ?int $id,
         public readonly string $name,
         public readonly ?string $description,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i:s')]
+        #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'F d, Y')]
         public readonly ?Carbon $created_at,
         #[MapInputName('memberIds')]
         public readonly array|Collection|Lazy $members,
@@ -35,20 +35,19 @@ class GroupData extends Data
     {
         return self::from([
             ...$request->all(),
-            'memberIds' => MemberData::collect(User::whereIn('id', $request->collect('memberIds'))->get()),
+            'memberIds' => MemberData::collect(User::whereIn('id', $request->collect('memberIds')->merge($request->user()->id))->get()),
         ]);
     }
 
     public static function fromModel(Group $group): self
     {
-
         return self::from([
             ...$group->toArray(),
-            'created_at' => $group->created_at->format('Y-m-d H:i:s'),
+            'created_at' => $group->created_at,
             'members' => Lazy::whenLoaded(
                 'members',
                 $group,
-                fn () => UserData::collect($group->members->where('id', '!=', auth()->user()->id))
+                fn () => MemberData::collect($group->members)
             ),
             'can' => [
                 'modify' => Auth::user()->can(GroupPolicy::MODIFY, $group),

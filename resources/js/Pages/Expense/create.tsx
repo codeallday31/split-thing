@@ -19,7 +19,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Expense, Group, Member } from '@/types';
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
 
 interface SplitOption {
@@ -42,12 +42,6 @@ interface Props {
 }
 
 const Create = ({ model }: Props) => {
-    const { auth } = usePage().props;
-    const groupMembers = [
-        { id: auth.user.id, name: 'Me' },
-        ...model.group.members,
-    ];
-
     const { data, setData, post, transform, put } = useForm<{
         id: number | null;
         description: string;
@@ -63,7 +57,7 @@ const Create = ({ model }: Props) => {
         expenseDate: '2024-10-23',
         payerId: model.expense?.payer.id.toString() ?? '',
         splitMethod: model.expense?.split_method ?? 'equally',
-        participants: groupMembers.map((member) => ({
+        participants: model.group.members.map((member) => ({
             ...member,
             isSelected: model.participants
                 ? !!model.participants[member.id]
@@ -181,12 +175,12 @@ const Create = ({ model }: Props) => {
                                     <SelectValue placeholder="Select who paid for" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {groupMembers.map((member) => (
+                                    {model.group.members.map((member) => (
                                         <SelectItem
                                             value={member.id.toString()}
                                             key={member.id}
                                         >
-                                            {member.name}
+                                            {`${member.name}`}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>

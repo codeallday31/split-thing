@@ -5,6 +5,7 @@ namespace App\ViewModels;
 use App\Data\GroupData;
 use App\Models\Group;
 use App\Models\User;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class UpsertGroupViewModel extends ViewModel
@@ -27,6 +28,10 @@ class UpsertGroupViewModel extends ViewModel
             return null;
         }
 
-        return GroupData::from($this->group)->except('created_at', 'can');
+        return GroupData::from(
+            $this->group->load(['members' => function (Builder $query) {
+                $query->where('user_id', '!=', auth()->id());
+            }])
+        )->except('created_at', 'can');
     }
 }

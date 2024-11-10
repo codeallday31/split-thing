@@ -19,7 +19,7 @@ class UpsertExpenseViewModel extends ViewModel
 
     public function group()
     {
-        return GroupData::from($this->group)->except('created_at', 'can', 'description', 'name');
+        return GroupData::from($this->group->load('members'))->except('created_at', 'can', 'description', 'name');
     }
 
     /**

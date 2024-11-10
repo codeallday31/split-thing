@@ -32,7 +32,9 @@ final class GetGroupsViewModel extends ViewModel
                     return $q->where('user_id', auth()->user()->id);
                 });
         })
-            ->get()->map(fn (Group $group) => GroupData::from($group)->except('members'));
+            ->get()
+            ->map
+            ->getData();
     }
 
     public function hasGroups(): bool

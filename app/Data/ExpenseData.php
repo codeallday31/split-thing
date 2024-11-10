@@ -12,12 +12,14 @@ use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Lazy;
 use Spatie\LaravelData\Mappers\CamelCaseMapper;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
+use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
 #[MapInputName(CamelCaseMapper::class)]
 class ExpenseData extends Data
@@ -31,31 +33,31 @@ class ExpenseData extends Data
         public readonly string $description,
         public readonly float $amount,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]
+        #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'Y-m-d')]
         public readonly Carbon $expense_date,
         #[MapInputName('payerId')]
         public readonly string|PayerData $payer,
-        #[WithCast(EnumCast::class)]
         public readonly null|Collection|Lazy $participants,
+        #[WithCast(EnumCast::class)]
         public readonly ExpenseSplitMethod $split_method,
     ) {}
 
     public static function fromRequest(Request $request): self
     {
-        $participants = ExpenseSplitMethod::from($request->splitMethod)->filterParticipants($request->participants);
-
+        // $participants = ExpenseSplitMethod::from($request->splitMethod)->filterParticipants($request->participants);
         return self::from([
             ...$request->all(),
             'payerId' => PayerData::from(User::whereId($request->collect('payerId'))->first()),
-            'participants' => $participants,
+            'participants' => ExpenseParticipantData::collect(
+                $request->collect('participants')->filter(fn ($item) => $item['isSelected'])->values(), Collection::class),
         ]);
     }
 
     public static function fromModel(Expense $expense): self
     {
-        // dd($expense->splits);
         return self::from([
             ...$expense->toArray(),
-            'expense_date' => $expense->expense_date->format('Y-m-d'),
+            'expense_date' => $expense->expense_date,
             'participants' => Lazy::whenLoaded(
                 'splits',
                 $expense,

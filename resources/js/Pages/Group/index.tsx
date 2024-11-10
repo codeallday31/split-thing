@@ -28,11 +28,12 @@ const Index = ({ model }: Props) => {
                 <div className="flex flex-1 items-center justify-center rounded-lg shadow-sm">
                     <div className="flex flex-col items-center gap-1 text-center">
                         <h3 className="text-2xl font-bold tracking-tight">
-                            You have no created groups
+                            You have not created any groups or joined any
+                            existing ones
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                            You can start adding expenses once you create a
-                            group.
+                            Start by creating a group, then you’ll be able to
+                            add and track expenses.
                         </p>
                         <Button className="mt-4" asChild>
                             <Link href={route('groups.create')}>

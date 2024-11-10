@@ -4,6 +4,7 @@ namespace App\Models\Group;
 
 use App\Data\ExpenseData;
 use App\Enums\ExpenseSplitMethod;
+use App\Enums\ExpenseStatus;
 use App\Models\ExpenseSplit;
 use App\Models\Group;
 use App\Models\User;
@@ -29,6 +30,7 @@ class Expense extends Model
 
     protected $dataClass = ExpenseData::class;
 
+    //
     /**
      * @return array<string, string>
      */
@@ -36,6 +38,7 @@ class Expense extends Model
     {
         return [
             'split_method' => ExpenseSplitMethod::class,
+            'status' => ExpenseStatus::class,
             'expense_date' => 'datetime',
         ];
     }
