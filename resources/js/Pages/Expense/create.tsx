@@ -30,6 +30,7 @@ interface SplitOption {
 interface ExpenseParticipant extends Member {
     isSelected: boolean;
     value: string | number;
+    isPayer: boolean;
 }
 
 interface Props {
@@ -59,6 +60,7 @@ const Create = ({ model }: Props) => {
         splitMethod: model.expense?.split_method ?? 'equally',
         participants: model.group.members.map((member) => ({
             ...member,
+            isPayer: false,
             isSelected: model.participants
                 ? !!model.participants[member.id]
                 : true,
@@ -69,9 +71,15 @@ const Create = ({ model }: Props) => {
     });
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        // el => (el.id === id ? {...el, text} : el)
         e.preventDefault();
         transform((data) => ({
             ...data,
+            participants: data.participants.map((participant) =>
+                participant.id === +data.payerId
+                    ? { ...participant, isPayer: true }
+                    : participant,
+            ),
             groupId: model.group.id,
         }));
 

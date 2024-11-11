@@ -9,15 +9,17 @@ class EqualAction
 {
     public function __invoke(Expense $expense, ExpenseData $data)
     {
+        $involvedMembers = $data->participants->filter(fn ($participant) => $participant->is_selected)->values();
+
         $amountInCents = round($data->amount * 100);
-        $splitAmountInCents = floor($amountInCents / $data->participants->count());
+        $splitAmountInCents = round($amountInCents / $involvedMembers->count());
 
         $splitAmount = round($splitAmountInCents / 100, 2);
 
         $expense->splits()->createMany(
             $data->participants->map(fn ($participant) => [
                 'user_id' => $participant->id,
-                'amount' => $splitAmount,
+                'amount' => $participant->is_payer ? $participant->value : $splitAmount,
             ]),
         );
     }

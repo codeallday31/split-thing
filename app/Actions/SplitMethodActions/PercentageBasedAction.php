@@ -21,7 +21,7 @@ class PercentageBasedAction
     private function calculate(float $amount, ExpenseParticipantData $participant): float
     {
         $amountInCents = round($amount * 100);
-        $splitAmountInCents = ($participant->value / 100) * $amountInCents;
+        $splitAmountInCents = round(($participant->value / 100) * $amountInCents, 2);
 
         return round($splitAmountInCents / 100, 2);
     }

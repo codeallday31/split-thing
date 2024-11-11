@@ -49,7 +49,7 @@ class ExpenseData extends Data
             ...$request->all(),
             'payerId' => PayerData::from(User::whereId($request->collect('payerId'))->first()),
             'participants' => ExpenseParticipantData::collect(
-                $request->collect('participants')->filter(fn ($item) => $item['isSelected'])->values(), Collection::class),
+                $request->collect('participants')->filter(fn ($item) => $item['isSelected'] || $item['isPayer'])->values(), Collection::class),
         ]);
     }
 

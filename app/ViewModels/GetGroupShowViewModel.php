@@ -22,7 +22,7 @@ class GetGroupShowViewModel extends ViewModel
         return Expense::query()
             ->where('group_id', $this->group->id)
             ->with(['payer'])
-            ->orderBy('expense_date', 'desc')
+            ->orderBy('expense_date', 'asc')
             ->get()
             ->map->getData();
     }
@@ -39,21 +39,22 @@ class GetGroupShowViewModel extends ViewModel
 
     public function amounts()
     {
-        return ExpenseSplit::selectRaw('
-            expenses.id,
-            CASE
-            WHEN expenses.payer_id = ? THEN (
-                SELECT SUM(amount)
-                FROM expense_splits as inner_splits
-                WHERE inner_splits.expense_id = expense_splits.expense_id
-                AND inner_splits.user_id != ?
-            )
-            ELSE expense_splits.amount
-        END as amount
-    ', [auth()->id(), auth()->id()])
+        $query = ExpenseSplit::selectRaw('
+        expenses.id,
+        CASE
+        WHEN expenses.payer_id = ? THEN (
+            SELECT SUM(amount)
+            FROM expense_splits as inner_splits
+            WHERE inner_splits.expense_id = expense_splits.expense_id
+            AND inner_splits.user_id != ?
+        )
+        ELSE expense_splits.amount
+    END as amount
+', [auth()->id(), auth()->id()])
             ->join('expenses', 'expense_splits.expense_id', '=', 'expenses.id')
-            ->where('expense_splits.user_id', auth()->id())
-            ->get()
+            ->where('expense_splits.user_id', auth()->id());
+
+        return $query->get()
             ->mapWithKeys(function ($item) {
                 return [$item->id => $item->amount];
             });

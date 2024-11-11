@@ -23,7 +23,7 @@ class ShareBasedAction
     private function calculate(float $amount, float $totalShares, ExpenseParticipantData $participant): float
     {
         $amountInCents = round($amount * 100);
-        $splitAmountInCents = ($participant->value / $totalShares) * $amountInCents;
+        $splitAmountInCents = round(($participant->value / $totalShares) * $amountInCents, 2);
 
         return round($splitAmountInCents / 100, 2);
     }
