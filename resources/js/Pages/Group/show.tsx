@@ -14,9 +14,10 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { EXPENSE_STATUS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { Expense, Group } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 
 interface Props {
     model: {
@@ -26,8 +27,13 @@ interface Props {
     };
 }
 
+const statusColor: { [key: string]: string } = {
+    lent: 'text-green-500',
+    borrowed: 'text-red-500',
+    'not involved': 'text-gray-700',
+};
+
 const Show = ({ model }: Props) => {
-    const { auth } = usePage().props;
     return (
         <>
             <div>
@@ -142,23 +148,17 @@ const Show = ({ model }: Props) => {
                                         {expense.payer.name}
                                     </TableCell>
                                     <TableCell
-                                        className={cn('text-muted-foreground')}
+                                        className={cn(
+                                            'text-muted-foreground',
+                                            statusColor[expense.status],
+                                        )}
                                     >
-                                        {`${expense.status} - ${model.amounts[expense.id]}`}
-                                        {/* !!model.amounts[expense.id]
-                                                ? expense.payer.id ===
-                                                  auth.user.id
-                                                    ? 'text-green-500'
-                                                    : 'text-red-500'
-                                                : 'text-gray-700', */}
-                                        {/* {!!model.amounts[expense.id]
-                                            ? `You ${
-                                                  expense.payer.id ===
-                                                  auth.user.id
-                                                      ? 'lent'
-                                                      : 'borrowed'
-                                              } (${model.amounts[expense.id]})`
-                                            : 'Not Involved'} */}
+                                        <span className="capitalize">
+                                            {`you ${expense.status}`}
+                                            {expense.status !==
+                                                EXPENSE_STATUS.not_involved &&
+                                                ` - ${model.amounts[expense.id]}`}
+                                        </span>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">
                                         {expense.expense_date}

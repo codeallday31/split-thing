@@ -46,16 +46,20 @@ class GetGroupShowViewModel extends ViewModel
 
     public function amounts()
     {
-        $query = ExpenseSplit::selectRaw('expenses.id,
-            CASE
-                WHEN expenses.payer_id = ? THEN (
-                SELECT SUM(amount)
-                FROM expense_splits as inner_splits
-                WHERE inner_splits.expense_id = expense_splits.expense_id
-                AND inner_splits.user_id != ?
-            )
-            ELSE expense_splits.amount
-        END as amount', [auth()->id(), auth()->id()])
+        $query = ExpenseSplit::select('expenses.id')
+            ->addSelect(['amount' => function (Builder $query) {
+                $query->selectRaw('
+                    CASE
+                        WHEN expenses.payer_id = ? THEN (
+                            SELECT SUM(amount)
+                            FROM expense_splits as inner_splits
+                            WHERE inner_splits.expense_id = expense_splits.expense_id
+                            AND inner_splits.user_id != ?
+                        )
+                        ELSE expense_splits.amount
+                    END', [auth()->id(), auth()->id()]);
+            },
+            ])
             ->join('expenses', 'expense_splits.expense_id', '=', 'expenses.id')
             ->where('expense_splits.user_id', auth()->id());
 

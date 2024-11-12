@@ -48,6 +48,7 @@ class UpsertExpenseViewModel extends ViewModel
 
         return ExpenseSplit::query()
             ->where('expense_id', $this->expense->id)
+            ->where('amount', '>', 0)
             ->get()
             ->mapWithKeys(fn (ExpenseSplit $split) => [
                 $split->user_id => $split->amount,

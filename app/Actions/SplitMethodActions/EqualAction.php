@@ -19,7 +19,7 @@ class EqualAction
         $expense->splits()->createMany(
             $data->participants->map(fn ($participant) => [
                 'user_id' => $participant->id,
-                'amount' => $participant->is_payer ? $participant->value : $splitAmount,
+                'amount' => $participant->is_payer && ! $participant->is_selected ? $participant->value : $splitAmount,
             ]),
         );
     }
