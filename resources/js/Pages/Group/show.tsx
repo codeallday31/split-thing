@@ -124,8 +124,8 @@ const Show = ({ model }: Props) => {
                                         <Button variant="link" asChild>
                                             <Link
                                                 href={route('expenses.show', {
-                                                    group: model.group.id,
-                                                    expense: expense.id,
+                                                    group: model.group,
+                                                    expense: expense,
                                                 })}
                                             >
                                                 {expense.description}
@@ -142,24 +142,23 @@ const Show = ({ model }: Props) => {
                                         {expense.payer.name}
                                     </TableCell>
                                     <TableCell
-                                        className={cn(
-                                            'text-muted-foreground',
-                                            !!model.amounts[expense.id]
+                                        className={cn('text-muted-foreground')}
+                                    >
+                                        {`${expense.status} - ${model.amounts[expense.id]}`}
+                                        {/* !!model.amounts[expense.id]
                                                 ? expense.payer.id ===
                                                   auth.user.id
                                                     ? 'text-green-500'
                                                     : 'text-red-500'
-                                                : 'text-gray-700',
-                                        )}
-                                    >
-                                        {!!model.amounts[expense.id]
+                                                : 'text-gray-700', */}
+                                        {/* {!!model.amounts[expense.id]
                                             ? `You ${
                                                   expense.payer.id ===
                                                   auth.user.id
                                                       ? 'lent'
                                                       : 'borrowed'
                                               } (${model.amounts[expense.id]})`
-                                            : 'Not Involved'}
+                                            : 'Not Involved'} */}
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">
                                         {expense.expense_date}
@@ -168,8 +167,8 @@ const Show = ({ model }: Props) => {
                                         <Button variant="link" asChild>
                                             <Link
                                                 href={route('expenses.edit', {
-                                                    group: model.group.id,
-                                                    expense: expense.id,
+                                                    group: model.group,
+                                                    expense: expense,
                                                 })}
                                             >
                                                 Edit

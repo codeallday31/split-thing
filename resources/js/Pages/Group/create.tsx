@@ -44,7 +44,7 @@ export default function Create({ model }: Props) {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (model.group) {
-            put(route('groups.update', model.group.id));
+            put(route('groups.update', model.group));
         } else {
             post(route('groups.store'));
         }

@@ -22,16 +22,13 @@ class UpsertExpenseViewModel extends ViewModel
         return GroupData::from($this->group->load('members'))->except('created_at', 'can', 'description', 'name');
     }
 
-    /**
-     * @return Collection<int, array<string, string>>
-     */
     public function splitOptions(): Collection
     {
         return collect(ExpenseSplitMethod::cases())
             ->map(fn ($option) => [
                 'label' => $option->name,
                 'value' => $option->value,
-            ]);
+            ])->values();
     }
 
     public function expense(): ?ExpenseData

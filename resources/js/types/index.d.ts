@@ -55,4 +55,5 @@ export interface Expense {
     split_method: string;
     payer: Payer;
     participants: SplitParticipant[];
+    status: string;
 }

@@ -86,12 +86,12 @@ const Create = ({ model }: Props) => {
         if (model.expense) {
             put(
                 route('expenses.update', {
-                    group: model.group.id,
-                    expense: model.expense.id,
+                    group: model.group,
+                    expense: model.expense,
                 }),
             );
         } else {
-            post(route('expenses.store', model.group.id));
+            post(route('expenses.store', model.group));
         }
     };
 

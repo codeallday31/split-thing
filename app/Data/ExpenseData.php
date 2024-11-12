@@ -3,6 +3,7 @@
 namespace App\Data;
 
 use App\Enums\ExpenseSplitMethod;
+use App\Enums\ExpenseStatus;
 use App\Models\Group\Expense;
 use App\Models\User;
 use App\Rules\SplitMethodRule;
@@ -18,6 +19,7 @@ use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Lazy;
 use Spatie\LaravelData\Mappers\CamelCaseMapper;
+use Spatie\LaravelData\Optional;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
@@ -40,11 +42,12 @@ class ExpenseData extends Data
         public readonly null|Collection|Lazy $participants,
         #[WithCast(EnumCast::class)]
         public readonly ExpenseSplitMethod $split_method,
+        #[WithCast(EnumCast::class)]
+        public readonly ExpenseStatus|Optional $status
     ) {}
 
     public static function fromRequest(Request $request): self
     {
-        // $participants = ExpenseSplitMethod::from($request->splitMethod)->filterParticipants($request->participants);
         return self::from([
             ...$request->all(),
             'payerId' => PayerData::from(User::whereId($request->collect('payerId'))->first()),

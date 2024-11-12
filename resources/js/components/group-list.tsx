@@ -48,17 +48,14 @@ const GroupList = ({ groups }: Props) => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem asChild>
-                                    <Link href={route('groups.show', group.id)}>
+                                    <Link href={route('groups.show', group)}>
                                         View
                                     </Link>
                                 </DropdownMenuItem>
                                 {group.can.modify && (
                                     <DropdownMenuItem asChild>
                                         <Link
-                                            href={route(
-                                                'groups.edit',
-                                                group.id,
-                                            )}
+                                            href={route('groups.edit', group)}
                                         >
                                             Edit
                                         </Link>

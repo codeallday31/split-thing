@@ -52,7 +52,7 @@ class SplitMethodRule implements DataAwareRule, ValidationRule
         }
     }
 
-    private static function convertValue(float $amount): int
+    private static function convertValue(float $amount): float
     {
         return round($amount * 100);
     }

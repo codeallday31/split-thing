@@ -28,7 +28,7 @@ class ExpenseController
     {
         UpsertExpenseAction::execute($data);
 
-        return to_route('groups.show', $group->id);
+        return to_route('groups.show', $group);
     }
 
     public function edit(Group $group, Expense $expense)
@@ -42,7 +42,7 @@ class ExpenseController
     {
         UpsertExpenseAction::execute($data);
 
-        return to_route('groups.show', $group->id);
+        return to_route('groups.show', $group);
     }
 
     public function show(Group $group, Expense $expense)
