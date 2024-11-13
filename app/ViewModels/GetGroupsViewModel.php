@@ -39,6 +39,10 @@ final class GetGroupsViewModel extends ViewModel
 
     public function hasGroups(): bool
     {
-        return auth()->user()->created_groups()->count() >= 1;
+        $user = auth()->user();
+
+        $user->loadCount(['created_groups', 'groups']);
+
+        return ($user->created_groups_count + $user->groups_count) >= 1;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Group;
 
+use App\Builders\ExpenseBuilder;
 use App\Data\ExpenseData;
 use App\Enums\ExpenseSplitMethod;
 use App\Enums\ExpenseStatus;
@@ -56,5 +57,10 @@ class Expense extends Model
     public function payer(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function newEloquentBuilder($query): ExpenseBuilder
+    {
+        return new ExpenseBuilder($query);
     }
 }

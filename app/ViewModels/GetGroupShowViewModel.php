@@ -22,22 +22,7 @@ class GetGroupShowViewModel extends ViewModel
     {
         return Expense::query()
             ->with(['payer'])
-            ->addSelect([
-                'status' => function (Builder $query) {
-                    $query->selectRaw("
-                    CASE
-                        WHEN payer_id = ? THEN 'lent'
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM expense_splits
-                            WHERE expense_splits.expense_id = expenses.id
-                            AND expense_splits.user_id = ?
-                            AND expense_splits.amount > 0
-                        ) THEN 'borrowed'
-                        ELSE 'not involved'
-                    END", [auth()->id(), auth()->id()]);
-                },
-            ])
+            ->withStatus()
             ->where('group_id', $this->group->id)
             ->orderBy('expense_date', 'asc')
             ->get()
@@ -47,19 +32,7 @@ class GetGroupShowViewModel extends ViewModel
     public function amounts()
     {
         $query = ExpenseSplit::select('expenses.id')
-            ->addSelect(['amount' => function (Builder $query) {
-                $query->selectRaw('
-                    CASE
-                        WHEN expenses.payer_id = ? THEN (
-                            SELECT SUM(amount)
-                            FROM expense_splits as inner_splits
-                            WHERE inner_splits.expense_id = expense_splits.expense_id
-                            AND inner_splits.user_id != ?
-                        )
-                        ELSE expense_splits.amount
-                    END', [auth()->id(), auth()->id()]);
-            },
-            ])
+            ->withTotalExpenses()
             ->join('expenses', 'expense_splits.expense_id', '=', 'expenses.id')
             ->where('expense_splits.user_id', auth()->id());
 

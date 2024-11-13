@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Builders\ExpenseSplitBuilder;
 use App\Models\Group\Expense;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,5 +20,10 @@ class ExpenseSplit extends Model
     public function expense(): BelongsTo
     {
         return $this->belongsTo(Expense::class);
+    }
+
+    public function newEloquentBuilder($query): ExpenseSplitBuilder
+    {
+        return new ExpenseSplitBuilder($query);
     }
 }
