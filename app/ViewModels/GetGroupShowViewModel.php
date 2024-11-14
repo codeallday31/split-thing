@@ -5,7 +5,6 @@ namespace App\ViewModels;
 use App\Models\ExpenseSplit;
 use App\Models\Group;
 use App\Models\Group\Expense;
-use Illuminate\Contracts\Database\Query\Builder;
 
 class GetGroupShowViewModel extends ViewModel
 {
@@ -15,7 +14,7 @@ class GetGroupShowViewModel extends ViewModel
 
     public function group()
     {
-        return $this->group->getData();
+        return $this->group->load('members')->getData();
     }
 
     public function expenses()

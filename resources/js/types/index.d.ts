@@ -16,6 +16,7 @@ export type PageProps<
 interface Member {
     id: number;
     name: string;
+    email: string;
 }
 
 interface Payer {

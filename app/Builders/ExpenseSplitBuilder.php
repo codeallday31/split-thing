@@ -2,8 +2,8 @@
 
 namespace App\Builders;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 
 class ExpenseSplitBuilder extends Builder
 {
@@ -20,7 +20,7 @@ class ExpenseSplitBuilder extends Builder
                     )
                     ELSE expense_splits.amount
                 END', [auth()->id(), auth()->id()]);
-            },
+        },
         ]);
     }
 }

@@ -18,6 +18,8 @@ import { EXPENSE_STATUS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { Expense, Group } from '@/types';
 import { Link } from '@inertiajs/react';
+import GroupParticipants from './partials/group-participants';
+import GroupSettlingUp from './partials/group-settling-up';
 
 interface Props {
     model: {
@@ -36,64 +38,38 @@ const statusColor: { [key: string]: string } = {
 const Show = ({ model }: Props) => {
     return (
         <>
-            <div>
-                <div>{model.group.name}</div>
-                {model.group.description}
+            <div className="md:flex md:items-center md:justify-between">
+                <div className="min-w-0 flex-1">
+                    <h2 className="text-lg font-semibold leading-7 sm:truncate md:text-2xl md:tracking-tight">
+                        {model.group.name}
+                    </h2>
+                    <p className="text-sm font-medium text-muted-foreground">
+                        {model.group.description}
+                    </p>
+                </div>
+                <div className="mt-4 flex md:ml-4 md:mt-0">
+                    {/* <button
+                        type="button"
+                        className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    >
+                        Edit
+                    </button>
+                    <button
+                        type="button"
+                        className="ml-3 inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
+                        Publish
+                    </button> */}
+                </div>
             </div>
-            {/* <div className="m-0 grid grid-cols-2 gap-8">
-                <Badge
-                    variant="outline"
-                    className="flex items-center justify-between rounded-lg px-8 py-5 shadow"
-                >
-                    <div className="flex items-center">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="lucide lucide-circle-off h-14 w-14"
-                        >
-                            <path d="m2 2 20 20" />
-                            <path d="M8.35 2.69A10 10 0 0 1 21.3 15.65" />
-                            <path d="M19.08 19.08A10 10 0 1 1 4.92 4.92" />
-                        </svg>
-                        <div className="ml-3 text-xl font-medium capitalize text-white">
-                            {ExpenseStatus.Unpaid}
-                        </div>
-                    </div>
-                    <div className="text-2xl font-medium">1</div>
-                </Badge>
-                <Badge
-                    variant="outline"
-                    className="flex items-center justify-between rounded-lg px-8 py-5 shadow"
-                >
-                    <div className="flex items-center">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="lucide lucide-handshake h-14 w-14"
-                        >
-                            <path d="m11 17 2 2a1 1 0 1 0 3-3" />
-                            <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" />
-                            <path d="m21 3 1 11h-2" />
-                            <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" />
-                            <path d="M3 4h8" />
-                        </svg>
-                        <div className="ml-3 text-xl font-medium capitalize text-white">
-                            {ExpenseStatus.Settled}
-                        </div>
-                    </div>
-                    <div className="text-2xl font-medium">13</div>
-                </Badge>
-            </div> */}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="col-span-2 lg:col-span-1">
+                    <GroupParticipants participants={model.group.members} />
+                </div>
+                <div className="col-span-2 lg:col-span-1">
+                    <GroupSettlingUp participants={model.group.members} />
+                </div>
+            </div>
             <Card className="mx-auto w-full">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div>

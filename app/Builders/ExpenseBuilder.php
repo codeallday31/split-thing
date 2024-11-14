@@ -2,8 +2,8 @@
 
 namespace App\Builders;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 
 class ExpenseBuilder extends Builder
 {
