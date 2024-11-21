@@ -25,7 +25,7 @@ interface Props {
     model: {
         group: Group;
         expenses: Expense[];
-        amounts: { [key: number]: string };
+        balance: { [key: number]: string };
     };
 }
 
@@ -64,7 +64,10 @@ const Show = ({ model }: Props) => {
             </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="col-span-2 lg:col-span-1">
-                    <GroupParticipants participants={model.group.members} />
+                    <GroupParticipants
+                        participants={model.group.members}
+                        balance={model.balance}
+                    />
                 </div>
                 <div className="col-span-2 lg:col-span-1">
                     <GroupSettlingUp participants={model.group.members} />
@@ -133,7 +136,7 @@ const Show = ({ model }: Props) => {
                                             {`you ${expense.status}`}
                                             {expense.status !==
                                                 EXPENSE_STATUS.not_involved &&
-                                                ` - ${model.amounts[expense.id]}`}
+                                                ` - ${expense.splits_sum_amount}`}
                                         </span>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">

@@ -57,4 +57,5 @@ export interface Expense {
     payer: Payer;
     participants: SplitParticipant[];
     status: string;
+    splits_sum_amount: number;
 }

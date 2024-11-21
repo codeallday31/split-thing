@@ -43,7 +43,8 @@ class ExpenseData extends Data
         #[WithCast(EnumCast::class)]
         public readonly ExpenseSplitMethod $split_method,
         #[WithCast(EnumCast::class)]
-        public readonly ExpenseStatus|Optional $status
+        public readonly ExpenseStatus|Optional $status,
+        public readonly ?float $splits_sum_amount,
     ) {}
 
     public static function fromRequest(Request $request): self
