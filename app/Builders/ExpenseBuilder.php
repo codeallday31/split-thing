@@ -19,7 +19,7 @@ class ExpenseBuilder extends Builder
                         FROM expense_splits
                         WHERE expense_splits.expense_id = expenses.id
                         AND expense_splits.user_id = ?
-                        AND expense_splits.amount > 0
+                        AND expense_splits.shares > 0
                     ) THEN 'borrowed'
                     ELSE 'not involved'
                 END", [auth()->id(), auth()->id()]);

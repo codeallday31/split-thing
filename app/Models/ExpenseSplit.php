@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Builders\ExpenseSplitBuilder;
+use App\Casts\MoneyCast;
 use App\Models\Group\Expense;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,9 +14,16 @@ class ExpenseSplit extends Model
 
     protected $fillable = [
         'user_id',
-        'amount',
+        'shares',
         'payment_date',
     ];
+
+    public function casts(): array
+    {
+        return [
+            'shares' => MoneyCast::class,
+        ];
+    }
 
     public function expense(): BelongsTo
     {

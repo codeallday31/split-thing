@@ -66,7 +66,7 @@ const Show = ({ model }: Props) => {
                 <div className="col-span-2 lg:col-span-1">
                     <GroupParticipants
                         participants={model.group.members}
-                        balance={model.balance}
+                        // balance={model.balance}
                     />
                 </div>
                 <div className="col-span-2 lg:col-span-1">
@@ -133,10 +133,10 @@ const Show = ({ model }: Props) => {
                                         )}
                                     >
                                         <span className="capitalize">
-                                            {`you ${expense.status}`}
+                                            {`${expense.status}`}
                                             {expense.status !==
                                                 EXPENSE_STATUS.not_involved &&
-                                                ` - ${expense.splits_sum_amount}`}
+                                                ` - ${expense.balance}`}
                                         </span>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">

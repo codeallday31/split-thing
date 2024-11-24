@@ -43,8 +43,8 @@ class ExpenseData extends Data
         #[WithCast(EnumCast::class)]
         public readonly ExpenseSplitMethod $split_method,
         #[WithCast(EnumCast::class)]
-        public readonly ExpenseStatus|Optional $status,
-        public readonly ?float $splits_sum_amount,
+        public readonly Optional|ExpenseStatus $status,
+        public readonly null|float|Optional $balance,
     ) {}
 
     public static function fromRequest(Request $request): self
@@ -53,7 +53,9 @@ class ExpenseData extends Data
             ...$request->all(),
             'payerId' => PayerData::from(User::whereId($request->collect('payerId'))->first()),
             'participants' => ExpenseParticipantData::collect(
-                $request->collect('participants')->filter(fn ($item) => $item['isSelected'] || $item['isPayer'])->values(), Collection::class),
+                $request->collect('participants')->filter(fn ($item) => $item['isSelected'])->values(),
+                Collection::class
+            ),
         ]);
     }
 
@@ -67,6 +69,7 @@ class ExpenseData extends Data
                 $expense,
                 fn () => SplitData::collect($expense->splits)
             ),
+            'balance' => $expense->balance,
         ]);
     }
 

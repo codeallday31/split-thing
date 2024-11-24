@@ -3,12 +3,14 @@
 namespace App\Models\Group;
 
 use App\Builders\ExpenseBuilder;
+use App\Casts\MoneyCast;
 use App\Data\ExpenseData;
 use App\Enums\ExpenseSplitMethod;
 use App\Enums\ExpenseStatus;
 use App\Models\ExpenseSplit;
 use App\Models\Group;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,6 +42,7 @@ class Expense extends Model
         return [
             'split_method' => ExpenseSplitMethod::class,
             'status' => ExpenseStatus::class,
+            'amount' => MoneyCast::class,
             'expense_date' => 'datetime',
         ];
     }
@@ -62,5 +65,14 @@ class Expense extends Model
     public function newEloquentBuilder($query): ExpenseBuilder
     {
         return new ExpenseBuilder($query);
+    }
+
+    public function balance(): Attribute
+    {
+        return new Attribute(
+            get: fn () => $this->splits_sum_shares
+                ? number_format($this->amount * (($this->splits_sum_shares / 100) / ($this->splits_count / 100)), 2)
+                : 0
+        );
     }
 }

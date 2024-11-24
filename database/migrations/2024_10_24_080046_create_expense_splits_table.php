@@ -17,9 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Expense::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->decimal('amount', 15, 2);
+            $table->integer('shares');
             $table->dateTime('payment_date')->nullable();
-            // $table->timestamps();
         });
     }
 

@@ -13,7 +13,6 @@ class ExpenseParticipantData extends Data
         public readonly int $id,
         public readonly string $name,
         public readonly bool $is_selected,
-        public readonly bool $is_payer,
-        public readonly float $value,
+        public readonly int $shares,
     ) {}
 }

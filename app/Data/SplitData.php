@@ -9,7 +9,7 @@ class SplitData extends Data
     public function __construct(
         public readonly int $id,
         public readonly int $expense_id,
-        public readonly float $amount,
+        public readonly float $shares,
         public readonly int $user_id,
     ) {}
 }
