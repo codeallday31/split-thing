@@ -1,11 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
-import { Member } from '@/types';
+import { cn } from '@/lib/utils';
+import { ExpenseSummary, Member } from '@/types';
 
 interface Props {
     participants: Member[];
+    balances: { [key: number]: ExpenseSummary };
 }
 
-export default function GroupParticipants({ participants }: Props) {
+export default function GroupParticipants({ participants, balances }: Props) {
     return (
         <Card>
             <CardHeader className="border-b-orange-50">
@@ -13,19 +15,32 @@ export default function GroupParticipants({ participants }: Props) {
             </CardHeader>
             <CardContent>
                 <div className="space-y-8">
-                    {participants.map((participant) => (
-                        <div className="flex items-center" key={participant.id}>
-                            <div className="space-y-1">
-                                <p className="text-sm font-medium leading-none">
-                                    {participant.name}
-                                </p>
-                                <p className="text-sm text-muted-foreground">
-                                    {participant.email}
-                                </p>
+                    {participants.map((participant) => {
+                        const balance = balances[participant.id]?.balance ?? 0;
+                        const isRecievable = balance > 0;
+                        return (
+                            <div
+                                className="flex items-center"
+                                key={participant.id}
+                            >
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium leading-none">
+                                        {participant.name}
+                                    </p>
+                                </div>
+                                <div
+                                    className={cn(
+                                        'ml-auto font-medium',
+                                        isRecievable
+                                            ? 'text-green-500'
+                                            : balance !== 0 && 'text-red-500',
+                                    )}
+                                >
+                                    {balance}
+                                </div>
                             </div>
-                            {/* <div className="ml-auto font-medium">0</div> */}
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </CardContent>
         </Card>

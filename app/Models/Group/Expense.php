@@ -71,7 +71,7 @@ class Expense extends Model
     {
         return new Attribute(
             get: fn () => $this->splits_sum_shares
-                ? number_format($this->amount * (($this->splits_sum_shares / 100) / ($this->splits_count / 100)), 2)
+                ? round(($this->amount * $this->splits_sum_shares / 100) / $this->splits_count / 100, 2)
                 : 0
         );
     }

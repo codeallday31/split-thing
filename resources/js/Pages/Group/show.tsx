@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/table';
 import { EXPENSE_STATUS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { Expense, Group } from '@/types';
+import { Expense, ExpenseSummary, Group } from '@/types';
 import { Link } from '@inertiajs/react';
 import GroupParticipants from './partials/group-participants';
 import GroupSettlingUp from './partials/group-settling-up';
@@ -25,7 +25,7 @@ interface Props {
     model: {
         group: Group;
         expenses: Expense[];
-        balance: { [key: number]: string };
+        balances: { [key: number]: ExpenseSummary };
     };
 }
 
@@ -66,7 +66,7 @@ const Show = ({ model }: Props) => {
                 <div className="col-span-2 lg:col-span-1">
                     <GroupParticipants
                         participants={model.group.members}
-                        // balance={model.balance}
+                        balances={model.balances}
                     />
                 </div>
                 <div className="col-span-2 lg:col-span-1">

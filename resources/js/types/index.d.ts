@@ -59,3 +59,9 @@ export interface Expense {
     status: string;
     balance: number;
 }
+
+export interface ExpenseSummary {
+    balance: number;
+    group_total_expenses: number;
+    owes: number;
+}
