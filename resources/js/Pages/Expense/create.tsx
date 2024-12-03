@@ -95,7 +95,7 @@ const Create = ({ model }: Props) => {
             'participants',
             data.participants.map((participant) =>
                 participant.id === memberId
-                    ? { ...participant, isSelected: isChecked, value: 0 }
+                    ? { ...participant, isSelected: isChecked, shares: 0 }
                     : participant,
             ),
         );
@@ -105,7 +105,9 @@ const Create = ({ model }: Props) => {
         setData(
             'participants',
             data.participants.map((participant) =>
-                participant.id === id ? { ...participant, value } : participant,
+                participant.id === id
+                    ? { ...participant, shares: value }
+                    : participant,
             ),
         );
     };
@@ -235,7 +237,7 @@ const Create = ({ model }: Props) => {
                                                 min={0}
                                                 step={0.01}
                                                 disabled={!p.isSelected}
-                                                value={p.value}
+                                                value={p.shares}
                                                 onChange={(e) =>
                                                     handleSplitValueChange(
                                                         p.id,

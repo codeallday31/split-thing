@@ -5,6 +5,7 @@ namespace App\ViewModels;
 use App\Models\ExpenseSplit;
 use App\Models\Group;
 use App\Models\Group\Expense;
+use App\Services\BalanceService;
 use Illuminate\Contracts\Database\Query\Builder;
 
 class GetGroupShowViewModel extends ViewModel
@@ -41,7 +42,7 @@ class GetGroupShowViewModel extends ViewModel
 
     public function balances()
     {
-        return ExpenseSplit::query()
+        $splits = ExpenseSplit::query()
             ->select([
                 'group_id',
                 'shares',
@@ -54,25 +55,16 @@ class GetGroupShowViewModel extends ViewModel
             ->selectRaw('(SELECT COUNT(*) FROM expense_splits WHERE expenses.id = expense_splits.expense_id) AS splits_count')
             ->join('expenses', 'expenses.id', '=', 'expense_splits.expense_id')
             ->where('expenses.group_id', $this->group->id)
-            ->get()
-            ->groupBy('user_id')
-            ->map(function ($items) {
-                $totalExpenseAmount = 0;
-                $owe = 0;
+            ->get();
 
-                $items->each(function ($item) use (&$totalExpenseAmount, &$owe) {
-                    if ($item['payer_id'] === $item['user_id']) {
-                        $totalExpenseAmount += $item['amount'];
-                    }
-                    $owe += 1 / $item['splits_count'] * $item['amount'];
-                });
+        $balanceService = new BalanceService($splits);
+        $tempBalances = $balanceService->tempBalance();
+        $repayments = $balanceService->repayments($tempBalances);
+        $balances = $balanceService->getBalance($repayments);
 
-                return [
-                    'group_total_expenses' => $totalExpenseAmount,
-                    'owe' => $owe,
-                    'balance' => ($totalExpenseAmount - $owe) / 100,
-                ];
-
-            });
+        return [
+            'data' => $balances,
+            'repayments' => $repayments,
+        ];
     }
 }

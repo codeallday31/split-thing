@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Actions\SplitMethodActions;
+namespace App\Actions;
 
 use App\Data\ExpenseData;
 use App\Models\Group\Expense;
 
-class AmountBasedAction
+class CreateExpenseSplits
 {
-    public function __invoke(Expense $expense, ExpenseData $data)
+    public static function execute(Expense $expense, ExpenseData $data)
     {
         $expense->splits()->createMany(
             $data->participants->map(fn ($participant) => [
                 'user_id' => $participant->id,
-                'amount' => $participant->value,
+                'shares' => $participant->shares,
             ]),
         );
     }

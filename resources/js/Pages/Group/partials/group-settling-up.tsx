@@ -1,17 +1,16 @@
-import {
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui';
-import { Member } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Member, Repayment } from '@/types';
 
 interface Props {
     participants: Member[];
+    repayments: Repayment[];
 }
 
-export default function GroupSettlingUp({ participants }: Props) {
+export default function GroupSettlingUp({ participants, repayments }: Props) {
+    const getParticipant = (id: number) =>
+        participants.find((p) => p.id === id);
+
     return (
         <Card>
             <CardHeader className="border-b-orange-50">
@@ -19,11 +18,11 @@ export default function GroupSettlingUp({ participants }: Props) {
             </CardHeader>
             <CardContent>
                 <div className="space-y-8">
-                    {participants.map((participant) => (
-                        <div className="flex items-center" key={participant.id}>
+                    {repayments.map((repayment, index) => (
+                        <div className="flex items-center" key={index}>
                             <div className="space-y-1">
                                 <span className="text-sm font-medium leading-none">
-                                    {participant.name} owes blah blah
+                                    {`${getParticipant(repayment.from)?.name} owes ${getParticipant(repayment.to)?.name}`}
                                 </span>
                                 <Button
                                     variant="link"
@@ -32,7 +31,9 @@ export default function GroupSettlingUp({ participants }: Props) {
                                     Make Payment
                                 </Button>
                             </div>
-                            <div className="ml-auto font-medium">0</div>
+                            <div className="ml-auto font-medium">
+                                {repayment.amount / 100}
+                            </div>
                         </div>
                     ))}
                 </div>

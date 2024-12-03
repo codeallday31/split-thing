@@ -67,11 +67,15 @@ class Expense extends Model
         return new ExpenseBuilder($query);
     }
 
-    public function balance(): Attribute
+    protected function balance(): Attribute
     {
+        [$myShare, $totalShares] = $this->split_method === ExpenseSplitMethod::Equally
+             ? [$this->splits_sum_shares / 100, $this->splits_count]
+             : [$this->splits_sum_shares, $this->amount];
+
         return new Attribute(
             get: fn () => $this->splits_sum_shares
-                ? round(($this->amount * $this->splits_sum_shares / 100) / $this->splits_count / 100, 2)
+                ? round((($myShare / $totalShares) * $this->amount) / 100, 2)
                 : 0
         );
     }

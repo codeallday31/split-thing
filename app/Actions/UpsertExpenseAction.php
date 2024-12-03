@@ -25,8 +25,7 @@ class UpsertExpenseAction
 
         $expense->splits->each->delete();
 
-        $splitMethod = $data->split_method->createExpenseSplit();
-        $splitMethod($expense, $data);
+        CreateExpenseSplits::execute($expense, $data);
 
         return $expense;
     }

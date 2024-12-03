@@ -39,7 +39,7 @@ class SplitMethodRule implements DataAwareRule, ValidationRule
     {
         $totalParticipantsValue = ExpenseParticipantData::collect($value, Collection::class)
             ->filter(fn ($particpant) => $particpant->is_selected)
-            ->sum('value');
+            ->sum('shares');
 
         if (ExpenseSplitMethod::from($this->data['splitMethod']) === ExpenseSplitMethod::Amount) {
             if ($this->convertValue($totalParticipantsValue) !== $this->convertValue($this->data['amount'])) {

@@ -62,6 +62,12 @@ export interface Expense {
 
 export interface ExpenseSummary {
     balance: number;
-    group_total_expenses: number;
-    owes: number;
+    total_expenses: number;
+    paid: number;
+}
+
+export interface Repayment {
+    amount: number;
+    to: number;
+    from: number;
 }
