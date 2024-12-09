@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Enums\ExpenseSplitMethod;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as SupportCollection;
 
 class BalanceService
 {
@@ -41,13 +40,11 @@ class BalanceService
 
     public function repayments($balances)
     {
-        // Step 1: Separate creditors and debtors
         $creditors = collect($balances)->filter(fn($user) => $user['balance'] > 0)->toArray();
         $debtors = collect($balances)->filter(fn($user) => $user['balance'] < 0)->toArray();
 
         $transactions = [];
 
-        // Step 2: Greedy algorithm for settling debts
         while (!empty($creditors) && !empty($debtors)) {
             $creditorId = array_key_first($creditors);
             $debtorId = array_key_first($debtors);
@@ -55,20 +52,16 @@ class BalanceService
             $creditAmount = $creditors[$creditorId]['balance'];
             $debtAmount = abs($debtors[$debtorId]['balance']);
 
-            // Settle the minimum amount
             $settleAmount = min($creditAmount, $debtAmount);
-
             $transactions[] = [
                 'from' => $debtorId,
                 'to' => $creditorId,
                 'amount' => $settleAmount,
             ];
 
-            // Update balances
             $creditors[$creditorId]['balance'] -= $settleAmount;
             $debtors[$debtorId]['balance'] += $settleAmount;
 
-            // Remove settled creditors or debtors
             if ($creditors[$creditorId]['balance'] == 0) {
                 unset($creditors[$creditorId]);
             }
@@ -76,9 +69,7 @@ class BalanceService
                 unset($debtors[$debtorId]);
             }
         }
-
         return $transactions;
-
     }
 
     public function getBalance(array $suggestedReimbursements)

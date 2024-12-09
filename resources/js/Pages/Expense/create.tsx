@@ -95,7 +95,7 @@ const Create = ({ model }: Props) => {
             'participants',
             data.participants.map((participant) =>
                 participant.id === memberId
-                    ? { ...participant, isSelected: isChecked, shares: 0 }
+                    ? { ...participant, isSelected: isChecked }
                     : participant,
             ),
         );
