@@ -15,7 +15,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { EXPENSE_STATUS } from '@/lib/constants';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { Expense, ExpenseSummary, Group, Repayment } from '@/types';
 import { Link } from '@inertiajs/react';
 import GroupParticipants from './partials/group-participants';
@@ -124,7 +124,7 @@ const Show = ({ model }: Props) => {
                                         </Button>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">
-                                        {expense.amount}
+                                        {formatCurrency(expense.amount)}
                                     </TableCell>
                                     <TableCell className="capitalize text-muted-foreground">
                                         {expense.split_method}
@@ -142,7 +142,7 @@ const Show = ({ model }: Props) => {
                                             {`${expense.status}`}
                                             {expense.status !==
                                                 EXPENSE_STATUS.not_involved &&
-                                                ` - ${expense.balance}`}
+                                                ` - ${formatCurrency(expense.balance)}`}
                                         </span>
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">

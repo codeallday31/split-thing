@@ -75,7 +75,7 @@ class Expense extends Model
 
         return new Attribute(
             get: fn () => $this->splits_sum_shares
-                ? round((($myShare / $totalShares) * $this->amount) / 100, 2)
+                ? $this->amount * $myShare / $totalShares
                 : 0
         );
     }

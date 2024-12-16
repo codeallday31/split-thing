@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { ExpenseSummary, Member } from '@/types';
 
 interface Props {
@@ -36,7 +36,7 @@ export default function GroupParticipants({ participants, balances }: Props) {
                                             : balance !== 0 && 'text-red-500',
                                     )}
                                 >
-                                    {balance / 100}
+                                    {formatCurrency(balance)}
                                 </div>
                             </div>
                         );

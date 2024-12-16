@@ -13,6 +13,7 @@ class BalanceService
 
     public function tempBalance()
     {
+
         return $this->splits->groupBy('user_id')
             ->map(function ($items) {
                 $totalExpenseAmount = 0;
@@ -27,25 +28,26 @@ class BalanceService
                         $totalExpenseAmount += $item['amount'];
                     }
 
-                    $paid += $myShare / $totalShares * $item['amount'];
+                    $paid += ($item['amount'] * $myShare) / $totalShares;
+
                 });
 
                 return [
                     'total_expenses' => $totalExpenseAmount,
-                    'paid' => round($paid),
-                    'balance' => round($totalExpenseAmount - $paid),
+                    'paid' => $paid,
+                    'balance' => $totalExpenseAmount - $paid,
                 ];
             });
     }
 
     public function repayments($balances)
     {
-        $creditors = collect($balances)->filter(fn($user) => $user['balance'] > 0)->toArray();
-        $debtors = collect($balances)->filter(fn($user) => $user['balance'] < 0)->toArray();
+        $creditors = collect($balances)->filter(fn ($user) => $user['balance'] > 0)->toArray();
+        $debtors = collect($balances)->filter(fn ($user) => $user['balance'] < 0)->toArray();
 
         $transactions = [];
 
-        while (!empty($creditors) && !empty($debtors)) {
+        while (! empty($creditors) && ! empty($debtors)) {
             $creditorId = array_key_first($creditors);
             $debtorId = array_key_first($debtors);
 
@@ -69,13 +71,14 @@ class BalanceService
                 unset($debtors[$debtorId]);
             }
         }
+
         return $transactions;
     }
 
     public function getBalance(array $suggestedReimbursements)
     {
         $balances = [];
-        foreach($suggestedReimbursements as $reimbursement) {
+        foreach ($suggestedReimbursements as $reimbursement) {
             $from = $reimbursement['from'];
             $to = $reimbursement['to'];
             $amount = $reimbursement['amount'];
@@ -97,7 +100,7 @@ class BalanceService
             // Update balances for the 'to' participant
             $balances[$to]['total_expenses'] += $amount;
             $balances[$to]['balance'] += $amount;
-        };
+        }
 
         return $balances;
     }

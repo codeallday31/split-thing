@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button';
+import MakePaymentModal from '@/components/make-payment-modal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCurrency } from '@/lib/utils';
 import { Member, Repayment } from '@/types';
 
 interface Props {
@@ -24,15 +25,10 @@ export default function GroupSettlingUp({ participants, repayments }: Props) {
                                 <span className="text-sm font-medium leading-none">
                                     {`${getParticipant(repayment.from)?.name} owes ${getParticipant(repayment.to)?.name}`}
                                 </span>
-                                <Button
-                                    variant="link"
-                                    className="text-green-500"
-                                >
-                                    Make Payment
-                                </Button>
+                                <MakePaymentModal amount={repayment.amount} />
                             </div>
                             <div className="ml-auto font-medium">
-                                {repayment.amount / 100}
+                                {formatCurrency(repayment.amount)}
                             </div>
                         </div>
                     ))}

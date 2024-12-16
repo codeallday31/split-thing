@@ -72,3 +72,14 @@ export const calculateSplit = (amount: number, participants: number) => {
 
     return roundTo(splitAmountInCents / 100, 2);
 };
+
+export function formatCurrency(amount: number) {
+    const format = new Intl.NumberFormat('en-PH', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        style: 'currency',
+        currency: 'PHP',
+    });
+
+    return format.format(amount / 100);
+}
